@@ -12,6 +12,36 @@ export interface ZattoServerQuitDependencies {
   stop: () => Promise<void>;
 }
 
+/** Operations that flush window state before stopping the owned server. */
+export interface StateFlushingStopDependencies {
+  flushState: () => Promise<void>;
+  reportStateError: (error: unknown) => void;
+  stopServer: () => Promise<void>;
+}
+
+/**
+ * Creates a stop operation that cannot be blocked by state persistence failure.
+ *
+ * @param dependencies - State flush, error reporting, and server stop operations
+ * @returns Operation that flushes state and then stops the server
+ */
+export function createStateFlushingStop(
+  dependencies: StateFlushingStopDependencies,
+): () => Promise<void> {
+  return async () => {
+    try {
+      await dependencies.flushState();
+    } catch (error) {
+      try {
+        dependencies.reportStateError(error);
+      } catch {
+        // Error reporting must not supersede owned-process cleanup.
+      }
+    }
+    await dependencies.stopServer();
+  };
+}
+
 function isOwnedChildCleanupFailure(error: unknown): boolean {
   return (
     !(error instanceof ZattoServerError) ||

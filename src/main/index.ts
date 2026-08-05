@@ -1,83 +1,112 @@
-import { app, BrowserWindow, dialog } from "electron";
-
-import { createZattoServerQuitHandler } from "./app-lifecycle";
-import { createMainWindowOptions } from "./window-options";
+import { app, BrowserWindow, screen } from "electron";
+import {
+  createStateFlushingStop,
+  createZattoServerQuitHandler,
+} from "./app-lifecycle";
+import { ApplicationWindow } from "./application-window";
+import { runWindowStartup } from "./window-flow";
 import type { ZattoServerManager } from "./zatto-server-manager";
 import { runZattoServerProbe } from "./zatto-server-probe";
 import { createElectronZattoServerManager } from "./zatto-server-process";
 
 const ZATTO_SERVER_PROBE_ARGUMENT = "--smoke-test-zatto-server";
 const isZattoServerProbe = process.argv.includes(ZATTO_SERVER_PROBE_ARGUMENT);
+let applicationWindow: ApplicationWindow | undefined;
 let zattoServerManager: ZattoServerManager | undefined;
+
+function getWorkAreas() {
+  const primaryDisplay = screen.getPrimaryDisplay();
+  return [
+    primaryDisplay,
+    ...screen
+      .getAllDisplays()
+      .filter((display) => display.id !== primaryDisplay.id),
+  ].map((display) => display.workArea);
+}
+
+function settleWindowTask(operation: Promise<unknown>): void {
+  void operation.catch(() => {
+    console.error("Zatto Desktop could not update its application window.");
+  });
+}
 
 if (!isZattoServerProbe) {
   app.on(
     "before-quit",
     createZattoServerQuitHandler({
       quit: () => app.quit(),
-      reportError: (error) =>
-        console.error("Zatto Desktop failed to stop its server:", error),
-      stop: () => zattoServerManager?.stop() ?? Promise.resolve(),
+      reportError: () =>
+        console.error("Zatto Desktop could not stop its server."),
+      stop: createStateFlushingStop({
+        flushState: () => applicationWindow?.flush() ?? Promise.resolve(),
+        reportStateError: () =>
+          console.error("Zatto Desktop could not save its window state."),
+        stopServer: () => zattoServerManager?.stop() ?? Promise.resolve(),
+      }),
     }),
   );
 }
 
-function reportStartupError(error: unknown): void {
-  console.error("Zatto Desktop failed to start:", error);
-  if (isZattoServerProbe) {
-    app.exit(1);
-    return;
-  }
-  dialog.showErrorBox(
-    "Zatto Desktop could not start",
-    "Close the application and try again.",
+async function runProbe(): Promise<void> {
+  const result = await runZattoServerProbe(
+    app.getAppPath(),
+    app.getPath("userData"),
   );
+  console.log("Zatto server probe passed:", JSON.stringify(result));
+  app.exit(0);
 }
 
 async function startApplication(): Promise<void> {
   if (isZattoServerProbe) {
-    const result = await runZattoServerProbe(
-      app.getAppPath(),
-      app.getPath("userData"),
-    );
-    console.log("Zatto server probe passed:", JSON.stringify(result));
-    app.exit(0);
+    await runProbe();
     return;
   }
-
-  createMainWindow();
-  zattoServerManager = createElectronZattoServerManager(
+  const window = new ApplicationWindow({
+    getManagerState: () => zattoServerManager?.state ?? { status: "failed" },
+    getWorkAreas,
+    preloadUrl: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+    rendererUrl: MAIN_WINDOW_WEBPACK_ENTRY,
+    userDataPath: app.getPath("userData"),
+  });
+  applicationWindow = window;
+  await window.restore();
+  const manager = createElectronZattoServerManager(
     app.getAppPath(),
     app.getPath("userData"),
   );
-  zattoServerManager.setUnexpectedErrorHandler(reportStartupError);
-  await zattoServerManager.start();
-
+  zattoServerManager = manager;
+  manager.setUnexpectedErrorHandler(() => {
+    console.error("Zatto Desktop server stopped unexpectedly.");
+    settleWindowTask(window.loadError());
+  });
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-      createMainWindow();
+      settleWindowTask(window.recreateForManagerState());
     }
   });
-}
-
-function createMainWindow(): BrowserWindow {
-  const mainWindow = new BrowserWindow(
-    createMainWindowOptions(MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY),
-  );
-
-  mainWindow.once("ready-to-show", () => {
-    mainWindow.show();
+  const result = await runWindowStartup({
+    createGeneration: () => window.createGeneration(),
+    loadError: (generation) => window.loadError(generation),
+    loadPreparation: (generation) => window.loadPreparation(generation),
+    loadZatto: (generation, url) => window.loadZatto(generation, url),
+    startServer: () => manager.start(),
   });
-
-  void mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY).catch(reportStartupError);
-
-  return mainWindow;
+  if (result === "failed") console.error("Zatto Desktop could not start.");
 }
 
-void app.whenReady().then(startApplication).catch(reportStartupError);
+function reportFatalStartupFailure(): void {
+  console.error("Zatto Desktop could not start.");
+  if (isZattoServerProbe) {
+    app.exit(1);
+    return;
+  }
+  if (applicationWindow !== undefined) {
+    settleWindowTask(applicationWindow.recreateForManagerState());
+  }
+}
+
+void app.whenReady().then(startApplication).catch(reportFatalStartupFailure);
 
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
+  if (process.platform !== "darwin") app.quit();
 });

@@ -22,6 +22,18 @@ const sourceWebDirectory = path.join(sourcePackageDirectory, "dist", "web");
 const { archivePath } = await resolvePackagedAppPaths();
 const sourcePackage = JSON.parse(await readFile(sourcePackagePath, "utf8"));
 
+const preloadBundlePath = path.join(
+  ".webpack",
+  "renderer",
+  "main_window",
+  "preload.js",
+);
+assertArchiveFile(preloadBundlePath);
+const preloadBundle = extractFile(archivePath, preloadBundlePath);
+if (preloadBundle.byteLength !== 0) {
+  throw new Error("Packaged preload bundle is not empty");
+}
+
 const packagedServerEntry = path.join(zattoPackageDirectory, serverExportPath);
 assertArchiveFile(packagedServerEntry);
 if (extractFile(archivePath, packagedServerEntry).byteLength === 0) {
@@ -66,7 +78,9 @@ if (!webFiles.includes("index.html")) {
   throw new Error("Installed zatto web assets do not contain index.html");
 }
 
-console.log(`Packaged zatto contents verified: ${webFiles.length} web files`);
+console.log(
+  `Packaged zatto contents and empty preload verified: ${webFiles.length} web files`,
+);
 
 function assertArchiveFile(relativePath) {
   try {

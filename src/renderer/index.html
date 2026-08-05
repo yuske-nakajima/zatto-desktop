@@ -10,16 +10,27 @@
     <title>Zatto Desktop</title>
   </head>
   <body>
-    <main class="preparation" aria-labelledby="preparation-title">
+    <main
+      class="preparation"
+      aria-labelledby="preparation-title"
+      data-screen="preparation"
+    >
       <p class="eyebrow">Zatto Desktop</p>
       <h1 id="preparation-title">Getting things ready</h1>
       <p class="description">
         The application shell is ready for the zatto server connection.
       </p>
-      <p class="error" data-error-message role="alert" hidden>
-        Zatto Desktop could not display this screen. Close the application and
-        try again.
-      </p>
+    </main>
+    <main
+      class="preparation"
+      aria-labelledby="error-title"
+      data-screen="error"
+      role="alert"
+      hidden
+    >
+      <p class="eyebrow">Zatto Desktop</p>
+      <h1 id="error-title">Zatto Desktop could not start</h1>
+      <p class="description">Close the application and try again.</p>
     </main>
   </body>
 </html>
