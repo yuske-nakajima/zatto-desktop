@@ -1,10 +1,26 @@
 import { app, BrowserWindow, dialog } from "electron";
 
+import { createZattoServerQuitHandler } from "./app-lifecycle";
 import { createMainWindowOptions } from "./window-options";
+import type { ZattoServerManager } from "./zatto-server-manager";
 import { runZattoServerProbe } from "./zatto-server-probe";
+import { createElectronZattoServerManager } from "./zatto-server-process";
 
 const ZATTO_SERVER_PROBE_ARGUMENT = "--smoke-test-zatto-server";
 const isZattoServerProbe = process.argv.includes(ZATTO_SERVER_PROBE_ARGUMENT);
+let zattoServerManager: ZattoServerManager | undefined;
+
+if (!isZattoServerProbe) {
+  app.on(
+    "before-quit",
+    createZattoServerQuitHandler({
+      quit: () => app.quit(),
+      reportError: (error) =>
+        console.error("Zatto Desktop failed to stop its server:", error),
+      stop: () => zattoServerManager?.stop() ?? Promise.resolve(),
+    }),
+  );
+}
 
 function reportStartupError(error: unknown): void {
   console.error("Zatto Desktop failed to start:", error);
@@ -30,6 +46,12 @@ async function startApplication(): Promise<void> {
   }
 
   createMainWindow();
+  zattoServerManager = createElectronZattoServerManager(
+    app.getAppPath(),
+    app.getPath("userData"),
+  );
+  zattoServerManager.setUnexpectedErrorHandler(reportStartupError);
+  await zattoServerManager.start();
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {

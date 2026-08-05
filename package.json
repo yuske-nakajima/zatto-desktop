@@ -1,7 +1,7 @@
 {
   "name": "zatto-desktop",
   "productName": "Zatto Desktop",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "macOS desktop shell for zatto",
   "main": ".webpack/main",
   "private": true,
