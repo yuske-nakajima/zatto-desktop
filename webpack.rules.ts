@@ -1,4 +1,4 @@
-import type { RuleSetRule } from 'webpack';
+import type { RuleSetRule } from "webpack";
 
 /** Webpack loaders shared by the main and renderer processes. */
 export const rules: RuleSetRule[] = [
@@ -6,9 +6,9 @@ export const rules: RuleSetRule[] = [
     exclude: /(node_modules|\.webpack)/,
     test: /\.tsx?$/,
     use: {
-      loader: 'ts-loader',
+      loader: "esbuild-loader",
       options: {
-        transpileOnly: true,
+        target: "es2022",
       },
     },
   },

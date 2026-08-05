@@ -1,13 +1,41 @@
-import { app, BrowserWindow, dialog } from 'electron';
+import { app, BrowserWindow, dialog } from "electron";
 
-import { createMainWindowOptions } from './window-options';
+import { createMainWindowOptions } from "./window-options";
+import { runZattoServerProbe } from "./zatto-server-probe";
+
+const ZATTO_SERVER_PROBE_ARGUMENT = "--smoke-test-zatto-server";
+const isZattoServerProbe = process.argv.includes(ZATTO_SERVER_PROBE_ARGUMENT);
 
 function reportStartupError(error: unknown): void {
-  console.error('Zatto Desktop failed to start:', error);
+  console.error("Zatto Desktop failed to start:", error);
+  if (isZattoServerProbe) {
+    app.exit(1);
+    return;
+  }
   dialog.showErrorBox(
-    'Zatto Desktop could not start',
-    'Close the application and try again.',
+    "Zatto Desktop could not start",
+    "Close the application and try again.",
   );
+}
+
+async function startApplication(): Promise<void> {
+  if (isZattoServerProbe) {
+    const result = await runZattoServerProbe(
+      app.getAppPath(),
+      app.getPath("userData"),
+    );
+    console.log("Zatto server probe passed:", JSON.stringify(result));
+    app.exit(0);
+    return;
+  }
+
+  createMainWindow();
+
+  app.on("activate", () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createMainWindow();
+    }
+  });
 }
 
 function createMainWindow(): BrowserWindow {
@@ -15,7 +43,7 @@ function createMainWindow(): BrowserWindow {
     createMainWindowOptions(MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY),
   );
 
-  mainWindow.once('ready-to-show', () => {
+  mainWindow.once("ready-to-show", () => {
     mainWindow.show();
   });
 
@@ -24,21 +52,10 @@ function createMainWindow(): BrowserWindow {
   return mainWindow;
 }
 
-void app
-  .whenReady()
-  .then(() => {
-    createMainWindow();
+void app.whenReady().then(startApplication).catch(reportStartupError);
 
-    app.on('activate', () => {
-      if (BrowserWindow.getAllWindows().length === 0) {
-        createMainWindow();
-      }
-    });
-  })
-  .catch(reportStartupError);
-
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
     app.quit();
   }
 });

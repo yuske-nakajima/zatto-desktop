@@ -1,8 +1,18 @@
 packages:
   - .
 
+allowBuilds:
+  electron: true
+  esbuild: true
+
 blockExoticSubdeps: false
 
-onlyBuiltDependencies:
-  - electron
-  - esbuild
+minimumReleaseAgeExclude:
+  - "@yuske-nakajima/zatto@0.1.2"
+  - electron-to-chromium@1.5.401
+  - electron@43.3.0
+  - ipaddr.js@2.5.0
+  - node-releases@2.0.52
+  - terser@5.49.1
+
+nodeLinker: hoisted
