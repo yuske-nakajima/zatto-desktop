@@ -1,7 +1,7 @@
-import './styles.css';
+import "./styles.css";
 
 const errorMessage = document.querySelector<HTMLElement>(
-  '[data-error-message]',
+  "[data-error-message]",
 );
 
 function revealErrorMessage(): void {
@@ -10,12 +10,12 @@ function revealErrorMessage(): void {
   }
 }
 
-window.addEventListener('error', (event) => {
-  console.error('Zatto Desktop renderer failed:', event.message);
+window.addEventListener("error", (event) => {
+  console.error("Zatto Desktop renderer failed:", event.message);
   revealErrorMessage();
 });
 
-window.addEventListener('unhandledrejection', () => {
-  console.error('Zatto Desktop renderer failed with an unhandled rejection.');
+window.addEventListener("unhandledrejection", () => {
+  console.error("Zatto Desktop renderer failed with an unhandled rejection.");
   revealErrorMessage();
 });

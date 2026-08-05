@@ -1,4 +1,4 @@
-import type { BrowserWindowConstructorOptions } from 'electron';
+import type { BrowserWindowConstructorOptions } from "electron";
 
 /**
  * Builds the main window options with renderer privileges disabled.
@@ -10,7 +10,7 @@ export function createMainWindowOptions(
   preloadPath: string,
 ): BrowserWindowConstructorOptions {
   return {
-    backgroundColor: '#f5f5f2',
+    backgroundColor: "#f5f5f2",
     height: 720,
     minHeight: 480,
     minWidth: 640,

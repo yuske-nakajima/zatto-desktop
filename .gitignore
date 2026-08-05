@@ -1,5 +1,6 @@
 .idea/
 .DS_Store
 node_modules/
+.pnpm-store/
 .webpack/
 out/
