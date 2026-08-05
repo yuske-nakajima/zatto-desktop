@@ -27,3 +27,5 @@ jobs:
         run: pnpm smoke:dev
       - name: Create application package
         run: pnpm make
+      - name: Probe zatto server in packaged application
+        run: pnpm smoke:packaged

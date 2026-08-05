@@ -47,7 +47,7 @@ describe("validateZattoHealthIdentity", () => {
           instanceId: INSTANCE_ID,
           name: "zatto",
           protocolVersion: 1,
-          version: "0.1.2",
+          version: "0.1.3",
         },
         runtimeRecord,
       ),
@@ -55,7 +55,7 @@ describe("validateZattoHealthIdentity", () => {
       instanceId: INSTANCE_ID,
       name: "zatto",
       protocolVersion: 1,
-      version: "0.1.2",
+      version: "0.1.3",
     });
   });
 
@@ -64,25 +64,25 @@ describe("validateZattoHealthIdentity", () => {
       instanceId: INSTANCE_ID,
       name: "other",
       protocolVersion: 1,
-      version: "0.1.2",
+      version: "0.1.3",
     },
     {
       instanceId: "other",
       name: "zatto",
       protocolVersion: 1,
-      version: "0.1.2",
+      version: "0.1.3",
     },
     {
       instanceId: INSTANCE_ID,
       name: "zatto",
       protocolVersion: 2,
-      version: "0.1.2",
+      version: "0.1.3",
     },
     {
       instanceId: INSTANCE_ID,
       name: "zatto",
       protocolVersion: 1,
-      version: "0.1.1",
+      version: "0.1.2",
     },
   ])("rejects a health identity mismatch: %j", (identity) => {
     expect(() => validateZattoHealthIdentity(identity, runtimeRecord)).toThrow(
@@ -97,7 +97,7 @@ describe("validateZattoHealthIdentity", () => {
           instanceId: INSTANCE_ID,
           name: "zatto",
           protocolVersion: 2,
-          version: "0.1.2",
+          version: "0.1.3",
         },
         { ...runtimeRecord, protocolVersion: 2 },
       ),

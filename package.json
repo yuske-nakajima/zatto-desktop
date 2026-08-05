@@ -1,7 +1,7 @@
 {
   "name": "zatto-desktop",
   "productName": "Zatto Desktop",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "macOS desktop shell for zatto",
   "main": ".webpack/main",
   "private": true,
@@ -21,15 +21,15 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@yuske-nakajima/zatto": "0.1.2"
+    "@yuske-nakajima/zatto": "0.1.3"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.5",
-    "@electron/asar": "3.4.1",
     "@electron-forge/cli": "7.11.2",
     "@electron-forge/maker-zip": "7.11.2",
     "@electron-forge/plugin-webpack": "7.11.2",
     "@electron-forge/shared-types": "7.11.2",
+    "@electron/asar": "3.4.1",
     "@types/node": "24.10.13",
     "css-loader": "7.1.2",
     "electron": "43.3.0",

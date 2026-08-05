@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@yuske-nakajima/zatto':
-        specifier: 0.1.2
-        version: 0.1.2
+        specifier: 0.1.3
+        version: 0.1.3
     devDependencies:
       '@biomejs/biome':
         specifier: 2.5.5
@@ -984,8 +984,8 @@ packages:
   '@xtuc/long@4.2.2':
     resolution: {integrity: sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==}
 
-  '@yuske-nakajima/zatto@0.1.2':
-    resolution: {integrity: sha512-InjtHSHMMa20BZxnfXD8yR+LFrt2ej0kmFckvZev7AQ5UX9dnYKVBJKvTMy7IbrbwOOVzLaI3RkWBlokNwhOEg==}
+  '@yuske-nakajima/zatto@0.1.3':
+    resolution: {integrity: sha512-zAMAC4yihDVjABdofY36XyVp8lHdJJ7zZNVcpKRGzQkSvSGlYpbu2rnX9fiZARqgose67GFXEKGHVONFoh1qPA==}
     engines: {node: '>=22.0.0'}
     hasBin: true
 
@@ -4780,7 +4780,7 @@ snapshots:
 
   '@xtuc/long@4.2.2': {}
 
-  '@yuske-nakajima/zatto@0.1.2':
+  '@yuske-nakajima/zatto@0.1.3':
     dependencies:
       '@fastify/websocket': 11.3.0
       chokidar: 5.0.0
