@@ -1,5 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
-import { createZattoServerQuitHandler } from "../src/main/app-lifecycle";
+import {
+  createStateFlushingStop,
+  createZattoServerQuitHandler,
+} from "../src/main/app-lifecycle";
 import { ZattoServerError } from "../src/main/zatto-server-errors";
 import { Deferred } from "./zatto-server-manager-fixture";
 
@@ -77,5 +80,22 @@ describe("createZattoServerQuitHandler", () => {
       expect(stop).toHaveBeenCalledTimes(2);
       expect(quit).toHaveBeenCalledOnce();
     });
+  });
+});
+
+describe("createStateFlushingStop", () => {
+  it("reports state persistence failure and still stops the server", async () => {
+    const failure = new Error("write failed");
+    const reportStateError = vi.fn();
+    const stopServer = vi.fn(async () => undefined);
+    const stop = createStateFlushingStop({
+      flushState: vi.fn(async () => Promise.reject(failure)),
+      reportStateError,
+      stopServer,
+    });
+
+    await expect(stop()).resolves.toBeUndefined();
+    expect(reportStateError).toHaveBeenCalledWith(failure);
+    expect(stopServer).toHaveBeenCalledOnce();
   });
 });

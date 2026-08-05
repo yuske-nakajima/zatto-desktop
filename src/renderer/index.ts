@@ -1,21 +1,26 @@
 import "./styles.css";
 
-const errorMessage = document.querySelector<HTMLElement>(
-  "[data-error-message]",
+const preparationScreen = document.querySelector<HTMLElement>(
+  '[data-screen="preparation"]',
+);
+const errorScreen = document.querySelector<HTMLElement>(
+  '[data-screen="error"]',
 );
 
-function revealErrorMessage(): void {
-  if (errorMessage !== null) {
-    errorMessage.hidden = false;
-  }
+function showErrorScreen(): void {
+  if (preparationScreen !== null) preparationScreen.hidden = true;
+  if (errorScreen !== null) errorScreen.hidden = false;
 }
 
-window.addEventListener("error", (event) => {
-  console.error("Zatto Desktop renderer failed:", event.message);
-  revealErrorMessage();
+const requestedState = new URL(window.location.href).searchParams.get("state");
+if (requestedState === "error") showErrorScreen();
+
+window.addEventListener("error", () => {
+  console.error("Zatto Desktop could not display its application screen.");
+  showErrorScreen();
 });
 
 window.addEventListener("unhandledrejection", () => {
-  console.error("Zatto Desktop renderer failed with an unhandled rejection.");
-  revealErrorMessage();
+  console.error("Zatto Desktop could not display its application screen.");
+  showErrorScreen();
 });
