@@ -14,10 +14,10 @@ pnpm check
 pnpm test
 pnpm smoke:dev
 pnpm make
+pnpm smoke:packaged
 ```
 
-zattoサーバーの同梱経路を変更した場合は、`pnpm smoke:packaged`も実行して結果を記録してください。
-このコマンドは、zatto 0.1.2の空白パスに対する直接実行判定が修正されるまで、既知の失敗を返します。
+`pnpm smoke:packaged`は、生成済みアプリ内のzattoサーバーが起動することを検証します。
 
 ## 実装ルール
 

@@ -8,7 +8,7 @@ allowBuilds:
 blockExoticSubdeps: false
 
 minimumReleaseAgeExclude:
-  - "@yuske-nakajima/zatto@0.1.2"
+  - "@yuske-nakajima/zatto@0.1.3"
   - electron-to-chromium@1.5.401
   - electron@43.3.0
   - ipaddr.js@2.5.0

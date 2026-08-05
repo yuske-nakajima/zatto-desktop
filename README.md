@@ -48,22 +48,22 @@ pnpm smoke:packaged
 
 ## zattoサーバーの検証結果
 
-`@yuske-nakajima/zatto@0.1.2`をproduction dependencyとして固定しています。
-開発ビルドでは、Electronのutility processから`dist/server/index.js`を直接forkし、次の項目を確認できます。
+`@yuske-nakajima/zatto@0.1.3`をproduction dependencyとして固定しています。
+開発ビルドでは、Electronのutility processから`@yuske-nakajima/zatto/server`のexport先をforkし、次の項目を確認できます。
 
 - port 0で割り当てられたポートをruntime recordから取得
 - `/api/health`の名前、バージョン、インスタンスID、プロトコル版
 - SIGTERM後のruntime recordとlock directoryの解放
 
-パッケージには、zattoサーバーとproduction dependency closureを単一のESMバンドルとして、同じ`node_modules/@yuske-nakajima/zatto/dist/server/index.js`へ配置します。
-zattoの静的UIは`dist/web`全体を同じパッケージ相対位置へ配置し、`pnpm make`と`pnpm smoke:packaged`の両方でserver entry、package metadata、静的UIを検査します。
-パッケージ済みアプリでは、zatto 0.1.2の直接実行判定が空白を含むアプリパスを扱えず、runtime recordの待機がタイムアウトします。
-`import.meta.url`では`Zatto%20Desktop`となる一方、`process.argv[1]`では`Zatto Desktop`となるためです。
-起動APIの意味を変える互換処理はこのリポジトリに追加せず、zatto側で公開起動エントリーが提供された後に`pnpm smoke:packaged`を成功条件へ切り替えます。
+パッケージには、zattoサーバーとproduction dependency closureを単一のESMバンドルとして配置します。
+配置先は`@yuske-nakajima/zatto/server`のexport先です。
+package metadataには同じexportsを含めるため、開発版とパッケージ版は同じ公開specifierを解決します。
+zattoの静的UIは`dist/web`全体を同じパッケージ相対位置へ配置します。
+`pnpm make`と`pnpm smoke:packaged`は、server export、package metadata、静的UIを検査します。
 
 ## バージョン管理
 
-アプリのバージョンは`0.1.1`です。
+アプリのバージョンは`0.1.2`です。
 バージョンは`package.json`を正として管理します。
 配布物の署名、公証、公開手順は、この開発基盤に含みません。
 
