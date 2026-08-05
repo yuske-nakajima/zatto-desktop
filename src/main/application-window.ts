@@ -1,5 +1,4 @@
 import { BrowserWindow } from "electron";
-
 import { configureElectronWindowSecurity } from "./electron-window-security";
 import {
   attachElectronWindowStateCapture,
@@ -16,7 +15,6 @@ import {
   type WindowState,
   WindowStateStore,
 } from "./window-state";
-
 /** Configuration for the single managed application window. */
 export interface ApplicationWindowOptions {
   getManagerState: () => WindowManagerState;
@@ -32,6 +30,7 @@ export class ApplicationWindow {
   private readonly getWorkAreas: () => readonly WindowBounds[];
   private readonly preloadUrl: string;
   private readonly rendererEntry: string;
+  private recreation?: Promise<void>;
   private state: WindowState = DEFAULT_WINDOW_STATE;
   private readonly stateStore: WindowStateStore;
   private window?: BrowserWindow;
@@ -136,6 +135,17 @@ export class ApplicationWindow {
    * @returns Completion of state-matched content loading
    */
   async recreateForManagerState(): Promise<void> {
+    if (this.recreation !== undefined) return this.recreation;
+    const recreation = this.performRecreation();
+    this.recreation = recreation;
+    try {
+      await recreation;
+    } finally {
+      if (this.recreation === recreation) this.recreation = undefined;
+    }
+  }
+
+  private async performRecreation(): Promise<void> {
     const window = this.window ?? this.create();
     const target = resolveWindowTarget(this.getManagerState());
     if (target.kind === "zatto") {
@@ -156,6 +166,11 @@ export class ApplicationWindow {
   async flush(): Promise<void> {
     if (this.window !== undefined) this.capture(this.window);
     await this.stateStore.flush();
+  }
+
+  /** @returns Current window without creating one, or undefined after close. */
+  getWindow(): BrowserWindow | undefined {
+    return this.window;
   }
 
   private create(): BrowserWindow {

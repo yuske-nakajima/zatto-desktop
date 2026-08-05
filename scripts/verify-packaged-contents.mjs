@@ -30,8 +30,21 @@ const preloadBundlePath = path.join(
 );
 assertArchiveFile(preloadBundlePath);
 const preloadBundle = extractFile(archivePath, preloadBundlePath);
-if (preloadBundle.byteLength !== 0) {
-  throw new Error("Packaged preload bundle is not empty");
+const preloadSource = preloadBundle.toString();
+const requiredPreloadTokens = [
+  "zatto-desktop:drop-html-files",
+  "getPathForFile",
+  "dragover",
+  "drop",
+  "send",
+];
+if (
+  preloadBundle.byteLength === 0 ||
+  requiredPreloadTokens.some((token) => !preloadSource.includes(token))
+) {
+  throw new Error(
+    "Packaged preload bundle does not contain restricted drop IPC",
+  );
 }
 
 const packagedServerEntry = path.join(zattoPackageDirectory, serverExportPath);
@@ -79,7 +92,7 @@ if (!webFiles.includes("index.html")) {
 }
 
 console.log(
-  `Packaged zatto contents and empty preload verified: ${webFiles.length} web files`,
+  `Packaged zatto contents and restricted preload verified: ${webFiles.length} web files`,
 );
 
 function assertArchiveFile(relativePath) {

@@ -112,6 +112,32 @@ describe("ApplicationWindow", () => {
     );
   });
 
+  it("shares one recreation between activate and file-menu requests", async () => {
+    const ownership = { url: "http://127.0.0.1:43120/" };
+    const applicationWindow = new ApplicationWindow({
+      getManagerState: () => ({ ownership, status: "running" }),
+      getWorkAreas: () => [{ height: 900, width: 1440, x: 0, y: 0 }],
+      preloadUrl: "file:///preload.js",
+      rendererUrl: "file:///renderer.html",
+      userDataPath: "/missing-user-data",
+    });
+    applicationWindow.createGeneration();
+    electron.FakeBrowserWindow.created[0]?.events.get("closed")?.();
+
+    await Promise.all([
+      applicationWindow.recreateForManagerState(),
+      applicationWindow.recreateForManagerState(),
+    ]);
+
+    expect(electron.FakeBrowserWindow.created).toHaveLength(2);
+    expect(
+      electron.FakeBrowserWindow.created[1]?.loadURL,
+    ).toHaveBeenCalledOnce();
+    expect(electron.FakeBrowserWindow.created[1]?.loadURL).toHaveBeenCalledWith(
+      ownership.url,
+    );
+  });
+
   it("quits after showing a native error", async () => {
     const applicationWindow = new ApplicationWindow({
       getManagerState: () => ({ status: "failed" }),
