@@ -35,7 +35,11 @@ const requiredPreloadTokens = [
   "zatto-desktop:drop-html-files",
   "getPathForFile",
   "dragover",
+  "dragenter",
+  "dragleave",
   "drop",
+  "zatto-desktop-drop-shield",
+  "prefers-reduced-motion",
   "send",
 ];
 if (
