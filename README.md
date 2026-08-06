@@ -1,84 +1,84 @@
 # Zatto Desktop
 
 <p align="center">
-  <img src="assets/icons/zatto-desktop.png" alt="Zatto Desktopのアプリアイコン" width="160" height="160" />
+  <img src="assets/icons/zatto-desktop.png" alt="Zatto Desktop application icon" width="160" height="160" />
 </p>
 
-Zatto Desktopは、zattoをmacOSで利用するためのElectronアプリです。
-このリポジトリには、Electronシェルと静的な準備画面を実装しています。
+[日本語](./README.ja.md)
 
-## ブランディング
+Zatto Desktop is an Electron application for using zatto on macOS.
+This repository contains the Electron shell and its static preparation screen.
 
-重なったHTMLカードがZの形に見えるアイコンを採用しています。
-1024pxの原画とmacOS、Windows、Linux向けの形式を管理しています。
+## Branding
 
-- `assets/brand/zatto-desktop-master.png`: 1024pxの透過原画
-- `assets/icons/zatto-desktop.icns`: macOS向けアイコン
-- `assets/icons/zatto-desktop.ico`: Windows向けアイコン
-- `assets/icons/zatto-desktop.png`: Linux向け512pxアイコン
+The application icon uses overlapping HTML cards that form the shape of a Z.
+The repository contains a 1024-pixel master and formats for macOS, Windows, and Linux.
 
-ImageMagickを利用できる環境では、原画から各形式を再生成できます。
+- `assets/brand/zatto-desktop-master.png`: transparent 1024-pixel master
+- `assets/icons/zatto-desktop.icns`: macOS icon
+- `assets/icons/zatto-desktop.ico`: Windows icon
+- `assets/icons/zatto-desktop.png`: 512-pixel Linux icon
+
+Regenerate the platform formats from the master when ImageMagick is available.
 
 ```sh
 pnpm icons:generate
 ```
 
-## 必要な環境
+## Requirements
 
 - macOS
 - [mise](https://mise.jdx.dev/)
 
-Node.js 24.18.0とpnpm 11.17.0は`.mise.toml`で固定しています。
+`.mise.toml` pins Node.js 24.18.0 and pnpm 11.17.0.
 
 ```sh
 mise install
 pnpm install --frozen-lockfile
 ```
 
-静的解析にはTypeScript 7.0.2とBiome 2.5.5を使用します。
-Electron Forgeの依存関係にはGit経由のパッケージが含まれます。
-そのため、`pnpm-workspace.yaml`で`blockExoticSubdeps`を無効にしています。
-Forgeが依存関係を収集できるようにしています。
-pnpmの依存レイアウトはhoistedへ固定しています。
-minimum release ageの除外対象は、必要なパッケージとメタデータだけです。
-固定バージョンを導入直後から再現できます。
+Static analysis uses TypeScript 7.0.2 and Biome 2.5.5.
+Electron Forge dependencies include packages installed through Git.
+The `pnpm-workspace.yaml` file therefore disables `blockExoticSubdeps` so
+Forge can collect its dependencies.
+The pnpm dependency layout is pinned to hoisted.
+Only the required packages and metadata are excluded from the minimum release age.
+This allows pinned versions to be installed reproducibly as soon as they are available.
 
-Node.js 26.6.0でも型検査と単体テストは成功しました。
-開発スモークテストも成功しました。
-一方、Electron Forgeは終了コード0のまま停止しました。
-停止した場所はパッケージのfinalizeです。
-`.app`は生成されませんでした。
-成果物を確実に生成できるNode.js 24.18.0を採用しています。
+Type checking, unit tests, and the development smoke test also passed on Node.js 26.6.0.
+Electron Forge, however, stopped during package finalization while retaining exit code 0,
+and did not produce an `.app` bundle.
+Node.js 24.18.0 is used because it reliably produces the application artifact.
 
-## 開発コマンド
+## Development
 
 ```sh
 pnpm start
 ```
 
-準備画面を表示し、検証済みのアプリ専用zatto UIへ遷移します。
+The application displays the preparation screen, then navigates to its validated,
+application-owned zatto UI.
 
-## HTMLファイルの追加
+## Adding HTML files
 
-「ファイル > HTMLファイルを開く」または`Command+O`で、
-HTMLファイルを追加できます。
-ファイル選択ダイアログでは、`.html`と`.htm`を複数選択できます。
-Finderからzattoのウィンドウへ、
-複数のHTMLファイルをドロップすることもできます。
-ファイルをウィンドウへ移動すると、全画面のドロップシールドを表示します。
-ドロップシールドはHTMLプレビューより手前に表示されます。
-そのため、ファイルをウィンドウ全体へドロップできます。
-視差効果を減らす設定では、ドロップ時の動きを抑えます。
-1回に追加できるファイルは256件までです。
-上限を超えた場合は、ファイルを追加せずにエラーを表示します。
-追加された先頭のファイルを表示します。
-一覧はzattoのWebSocket更新を反映します。
-重複しているファイルと存在しないファイルは追加されません。
-シンボリックリンクは実体パスへ解決し、同じ実体は1件として扱います。
-ディレクトリや通常ファイルではない項目も追加されません。
-この場合は、既存セッションを維持します。
-ダイアログのキャンセル、追加処理の失敗、サーバー停止は、
-個別の結果として処理します。
+Use **File > Open HTML Files** or <kbd>Command</kbd>+<kbd>O</kbd> to add HTML files.
+The file dialog accepts multiple `.html` and `.htm` files.
+Multiple HTML files can also be dragged from Finder into the zatto window.
+
+Moving files over the window displays a full-window drop shield above the HTML preview,
+allowing files to be dropped anywhere in the window.
+The transition is reduced when the operating system requests reduced motion.
+
+A single request can add up to 256 files.
+Requests exceeding the limit display an error without adding any files.
+The first successfully added file is displayed, and the list follows zatto WebSocket updates.
+Duplicate and missing files are not added.
+Symbolic links are resolved to their real paths, and paths with the same target are treated
+as one file. Directories and entries that are not regular files are also excluded while the
+existing session is preserved.
+Dialog cancellation, add failures, and server shutdown are handled as distinct results.
+
+Run the project checks.
 
 ```sh
 pnpm check
@@ -88,137 +88,126 @@ pnpm make
 pnpm smoke:packaged
 ```
 
-- `pnpm check`: 型検査、Lint、書式検査
-- `pnpm test`: Vitestによる単体テスト
-- `pnpm smoke:dev`: 開発ビルドで起動、health、認証付きshutdownを検証
-- `pnpm make`: macOS向けZIPパッケージを作成し、ASAR内のzatto構成を検査
-- `pnpm smoke:packaged`: ASAR構成と生成済み`.app`のサーバー検証
+- `pnpm check`: run type checking, linting, and formatting checks
+- `pnpm test`: run the Vitest unit tests
+- `pnpm smoke:dev`: verify startup, health, and authenticated shutdown in a development build
+- `pnpm make`: create a macOS ZIP and inspect the zatto content inside the ASAR archive
+- `pnpm smoke:packaged`: inspect the ASAR archive and verify the server in the generated `.app`
 
-## zattoサーバーの検証結果
+## zatto server verification
 
-`@yuske-nakajima/zatto@0.1.3`をproduction dependencyとして固定しています。
-通常起動では、最初に準備画面を作成します。
-その後、Electronのutility processとしてzattoサーバーを起動します。
-起動entryは`@yuske-nakajima/zatto/server`のexport先です。
-起動時はport 0とアプリ専用instance IDを指定します。
-runtime recordとhealth identityを照合し、起動したサーバーを検証します。
-サーバーの検証が完了するまで、zatto UIのURLは読み込みません。
-サーバーの起動時に問題が起きた場合は、エラー画面を表示します。
-稼働中に問題が起きた場合も同じ画面を表示します。
+`@yuske-nakajima/zatto@0.1.3` is pinned as a production dependency.
+During normal startup, the application creates the preparation window and then starts the
+zatto server as an Electron utility process.
+The entry point is the target exported by `@yuske-nakajima/zatto/server`.
+Startup uses port 0 and an application-specific instance ID.
+The runtime record and health identity are compared to verify the started server.
+The zatto UI URL is not loaded until this verification succeeds.
+The error screen appears if the server fails during startup or while running.
 
-サーバーのstateは、Electronのuser dataディレクトリに保存します。
-保存先には`zatto`サブディレクトリを使います。
-`server.json`と対応するlockは、実行中の所有確認に使います。
-`session.json`は、アプリを再起動しても維持します。
-CLIの既定runtimeとsessionにはアクセスしません。
+Server state is stored in a `zatto` subdirectory of Electron's user data directory.
+`server.json` and its corresponding lock verify ownership of the running process.
+`session.json` persists across application restarts.
+The application does not access the CLI's default runtime or session.
 
-アプリ終了時は、instance ID付きの`POST /api/shutdown`を送ります。
-レスポンスがHTTP 202であることを確認します。
-utility processの終了コードが0であることも確認します。
-さらにruntime recordとlockの消失を確認してからアプリを終了します。
-正常停止ではutility processへSIGTERMを送りません。
-shutdownに失敗した場合は、保持中のutility processの状態を確認します。
-生存している場合だけ、そのutility processへSIGTERMを送ります。
-runtime recordのPIDや外部プロセスは停止しません。
+On application shutdown, the shell sends `POST /api/shutdown` with the instance ID.
+It verifies an HTTP 202 response, exit code 0 from the utility process, and removal of the
+runtime record and lock before exiting.
+A normal shutdown does not send SIGTERM to the utility process.
+If shutdown fails, the shell checks the utility process it owns and sends SIGTERM only while
+that process is still alive. It never stops a PID from the runtime record or an external process.
 
-開発版とパッケージ版のsmoke probeは、同じmanagerを使います。
-smoke probeでは次の項目を確認できます。
+Development and packaged smoke probes use the same manager.
+They verify the following behavior:
 
-- port 0で割り当てられたポートをruntime recordから取得
-- `/api/health`の名前、バージョン、インスタンスID、プロトコル版
-- shutdown後のruntime recordとlock directoryの解放
+- read the port assigned for port 0 from the runtime record
+- verify the name, version, instance ID, and protocol version returned by `/api/health`
+- verify release of the runtime record and lock directory after shutdown
 
-probeのruntimeとsessionは、user data配下の一時ディレクトリへ隔離します。
-所有するutility processの正常終了を確認します。
-正常終了を確認した後だけ、一時ディレクトリを削除します。
+Probe runtime and session files are isolated in a temporary directory under user data.
+The directory is removed only after the owned utility process exits successfully.
 
-パッケージには、zattoサーバーとproduction dependency closureを配置します。
-これらは単一のESMバンドルです。
-配置先は`@yuske-nakajima/zatto/server`のexport先です。
-package metadataには同じexportsを含めます。
-開発版とパッケージ版は同じ公開specifierを解決します。
-zattoの静的UIは`dist/web`全体を同じパッケージ相対位置へ配置します。
-`pnpm make`と`pnpm smoke:packaged`は、server exportを検査します。
-package metadataと静的UIも検査します。
+The packaged application includes the zatto server and its production dependency closure as
+a single ESM bundle. It is placed at the target exported by
+`@yuske-nakajima/zatto/server`, and the package metadata contains the same exports.
+Development and packaged builds therefore resolve the same public specifier.
+The complete zatto static UI from `dist/web` is placed at the same package-relative location.
+`pnpm make` and `pnpm smoke:packaged` inspect the server export, package metadata,
+and static UI.
 
-## バージョン管理
+## Versioning
 
-アプリのバージョンは`0.1.5`です。
-バージョンは`package.json`を正として管理します。
+The application version is `0.1.5`.
+`package.json` is the source of truth for the version.
 
-## macOS向けRelease
+## macOS release
 
-GitHub Actionsの`Release` workflowを`main`から手動実行します。
-workflowは`package.json`のバージョンを読み取ります。
-`v<version>`形式のタグとGitHub Releaseを作成し、ZIPを添付します。
-同じタグが存在する場合は、Releaseを作成しません。
+Run the GitHub Actions `Release` workflow manually from `main`.
+The workflow reads the version from `package.json`, creates a `v<version>` tag and GitHub
+Release, and attaches the ZIP artifact.
+It does not create a Release when the tag already exists.
 
-Release前に型検査、Lint、書式検査、テストを実行します。
-開発版とパッケージ版のzattoサーバーも検証します。
-配布用アプリはDeveloper ID Application証明書で署名します。
-Electron ForgeがAppleのnotarytoolで公証し、結果をアプリへstapleします。
-最後にcodesignとGatekeeperで配布用アプリを検証します。
+Before release, the workflow runs type checking, linting, formatting checks, and tests.
+It also verifies the zatto server in development and packaged builds.
+The distribution application is signed with a Developer ID Application certificate.
+Electron Forge notarizes it with Apple's notarytool and staples the result to the application.
+Finally, the workflow validates the distribution application with codesign and Gatekeeper.
 
-リポジトリのActions Secretsに次の値を登録してください。
+Configure these repository Actions Secrets:
 
-- `MACOS_CERTIFICATE_P12`: Developer ID Application証明書と秘密鍵を含むP12ファイルのBase64文字列
-- `MACOS_CERTIFICATE_PASSWORD`: P12ファイルの書き出しパスワード
-- `MACOS_SIGNING_IDENTITY`: `Developer ID Application: 名前 (TEAMID)`形式の署名ID
-- `APPLE_ID`: Apple Developer Programへ登録したApple ID
-- `APPLE_APP_SPECIFIC_PASSWORD`: 公証用のアプリ用パスワード
-- `APPLE_TEAM_ID`: Apple Developer ProgramのTeam ID
+- `MACOS_CERTIFICATE_P12`: Base64-encoded P12 containing the Developer ID Application certificate and private key
+- `MACOS_CERTIFICATE_PASSWORD`: password used to export the P12
+- `MACOS_SIGNING_IDENTITY`: signing identity in `Developer ID Application: Name (TEAMID)` format
+- `APPLE_ID`: Apple ID registered with the Apple Developer Program
+- `APPLE_APP_SPECIFIC_PASSWORD`: app-specific password used for notarization
+- `APPLE_TEAM_ID`: Apple Developer Program team ID
 
-証明書とApple認証情報は、リポジトリへ保存しません。
-workflowは証明書を一時キーチェーンへ読み込みます。
-完了時には、一時キーチェーンとP12ファイルを削除します。
+Certificates and Apple credentials are not stored in the repository.
+The workflow imports the certificate into a temporary keychain and removes the keychain and
+P12 file when it finishes.
 
-### インストールと起動の確認
+### Installation and launch verification
 
-1. GitHub ReleasesからZIPをダウンロードします。
-2. ZIPを展開し、`Zatto Desktop.app`を`Applications`へ移動します。
-3. Finderから`Zatto Desktop.app`を開きます。
-4. 準備画面の後にzatto UIが表示されることを確認します。
-5. `Command+O`でHTMLファイルを追加できることを確認します。
-6. アプリを終了し、次回起動でもセッションが維持されることを確認します。
+1. Download the ZIP from GitHub Releases.
+2. Extract the ZIP and move `Zatto Desktop.app` into `Applications`.
+3. Open `Zatto Desktop.app` from Finder.
+4. Confirm that the zatto UI appears after the preparation screen.
+5. Confirm that <kbd>Command</kbd>+<kbd>O</kbd> adds HTML files.
+6. Quit the application and confirm that the session is preserved on the next launch.
 
-Gatekeeperが配布物を受け入れるかコマンドでも確認できます。
+Gatekeeper acceptance can also be checked from the command line.
 
 ```sh
 codesign --verify --deep --strict --verbose=2 "/Applications/Zatto Desktop.app"
 spctl --assess --type execute --verbose=2 "/Applications/Zatto Desktop.app"
 ```
 
-## セキュリティ境界
+## Security boundary
 
-レンダラーではNode.js APIを利用できません。
-メインウィンドウは、コンテキスト分離を有効にします。
-サンドボックスも有効にします。
-Webセキュリティも有効にします。
-preloadからレンダラーへ公開するAPIはありません。
-Finderのドロップは、preload内でOS由来のFileを絶対パスへ変換します。
-絶対パスは、送信元、main frame、所有origin、payloadを検証する
-限定IPCへ直接送ります。
-Webコンテンツへパス取得APIや絶対パスを公開しません。
-レンダラーが移動できるURLを限定します。
-移動先は検証済みzattoサーバーと同じoriginです。
-別host、別port、認証情報付きURL、外部URL、新規ウィンドウを拒否します。
-権限要求と権限確認は、すべて拒否します。
-所有originのsubFrame文書は、Electronが応答へ追加するCSPで隔離します。
-この境界には、zattoの`/f/`内にある未信頼HTMLも含まれます。
-このCSPは、インラインとdata URLおよびblob URLのスクリプトを許可します。
-画像、音声、動画はHTMLと同じディレクトリだけを許可します。
-スクリプトとスタイルも同じディレクトリだけを許可します。
-data URLとblob URLによるローカル資産も許可します。
-API通信と外部originへの通信は拒否します。
-フォーム送信も拒否します。
-未信頼HTMLには同一origin権限がありません。
-親画面やzatto APIへアクセスできません。
+Node.js APIs are unavailable to the renderer.
+The main window enables context isolation, sandboxing, and web security.
+The preload does not expose an API to the renderer.
 
-## ウィンドウ状態
+For Finder drops, the preload converts operating-system `File` objects to absolute paths.
+It sends those paths directly through restricted IPC that validates the sender, main frame,
+owned origin, and payload. Path lookup APIs and absolute paths are not exposed to web content.
 
-通常時の位置と大きさをuser data配下へ保存します。
-最大化とフルスクリーンの状態も保存します。
-保存値が壊れている場合は初期値を使います。
-保存位置が全ディスプレイの外にある場合は補正します。
-ウィンドウは利用可能な画面へ戻ります。
-状態の保存に失敗しても、所有するzattoサーバーを停止します。
+Renderer navigation is restricted to the same origin as the validated zatto server.
+Different hosts and ports, URLs containing credentials, external URLs, and new windows are
+rejected. Permission requests and checks are always denied.
+
+Subframe documents from the owned origin are isolated by a CSP added by Electron responses.
+This boundary includes untrusted HTML under zatto's `/f/` route.
+The CSP allows inline scripts and scripts from data and blob URLs.
+Images, audio, video, scripts, and styles are limited to the same directory as the HTML,
+with local assets also allowed through data and blob URLs.
+API communication, external-origin communication, and form submission are rejected.
+Untrusted HTML has no same-origin privileges and cannot access the parent page or zatto API.
+
+## Window state
+
+The application stores the normal window position and size under user data.
+It also stores maximized and full-screen state.
+Invalid saved values fall back to defaults.
+Positions outside every display are corrected so the window returns to an available screen.
+The application still stops its owned zatto server if saving window state fails.
