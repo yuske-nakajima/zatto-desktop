@@ -16,11 +16,11 @@ const requestedState = new URL(window.location.href).searchParams.get("state");
 if (requestedState === "error") showErrorScreen();
 
 window.addEventListener("error", () => {
-  console.error("Zatto Desktop could not display its application screen.");
+  console.error("zatto could not display its application screen.");
   showErrorScreen();
 });
 
 window.addEventListener("unhandledrejection", () => {
-  console.error("Zatto Desktop could not display its application screen.");
+  console.error("zatto could not display its application screen.");
   showErrorScreen();
 });

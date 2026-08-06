@@ -87,7 +87,7 @@ jobs:
       - name: Verify signature and Gatekeeper acceptance
         id: artifact
         run: |
-          app_path="$(find out -type d -name 'Zatto Desktop.app' -print -quit)"
+          app_path="$(find out -type d -name 'zatto.app' -print -quit)"
           artifact_path="$(find out/make -type f -name '*-${{ steps.release.outputs.version }}.zip' -print -quit)"
           if [[ -z "$app_path" || -z "$artifact_path" ]]; then
             echo "::error::Release application or ZIP was not generated"
@@ -103,7 +103,7 @@ jobs:
           gh release create "${{ steps.release.outputs.tag }}" \
             "${{ steps.artifact.outputs.path }}" \
             --target "$GITHUB_SHA" \
-            --title "Zatto Desktop ${{ steps.release.outputs.version }}" \
+            --title "zatto ${{ steps.release.outputs.version }}" \
             --generate-notes \
             --fail-on-no-commits
       - name: Remove signing keychain
