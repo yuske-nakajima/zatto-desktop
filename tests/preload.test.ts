@@ -3,14 +3,24 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 describe("preload", () => {
-  it("does not expose renderer APIs", async () => {
-    const source = await readFile(
-      path.join(process.cwd(), "src/preload/index.ts"),
-      "utf8",
-    );
+  it("uses restricted drop IPC without exposing renderer APIs", async () => {
+    const source = (
+      await Promise.all(
+        [
+          "index.ts",
+          "html-file-drop-shield.ts",
+          "html-file-drop-shield-styles.ts",
+        ].map((fileName) =>
+          readFile(path.join(process.cwd(), "src/preload", fileName), "utf8"),
+        ),
+      )
+    ).join("\n");
 
-    expect(source.trim()).toBe("export {};");
     expect(source).not.toContain("contextBridge");
-    expect(source).not.toContain("ipcRenderer");
+    expect(source).toContain("webUtils.getPathForFile");
+    expect(source).toContain("ipcRenderer.send");
+    expect(source).toContain("zatto-desktop-drop-shield");
+    expect(source).toContain("prefers-reduced-motion: reduce");
+    expect(source).not.toContain("window.");
   });
 });

@@ -4,6 +4,7 @@ import {
   createZattoServerQuitHandler,
 } from "./app-lifecycle";
 import { ApplicationWindow } from "./application-window";
+import { configureElectronHtmlFiles } from "./electron-html-files";
 import { runWindowStartup } from "./window-flow";
 import type { ZattoServerManager } from "./zatto-server-manager";
 import { runZattoServerProbe } from "./zatto-server-probe";
@@ -91,6 +92,19 @@ async function startApplication(): Promise<void> {
     loadZatto: (generation, url) => window.loadZatto(generation, url),
     startServer: () => manager.start(),
   });
+  if (manager.state.status === "running") {
+    configureElectronHtmlFiles({
+      ensureWindow: async () => {
+        if (manager.state.status !== "running") return undefined;
+        const current = window.getWindow();
+        if (current !== undefined && !current.isDestroyed()) return current;
+        await window.recreateForManagerState();
+        return window.getWindow();
+      },
+      getState: () => manager.state,
+      getWindow: () => window.getWindow(),
+    });
+  }
   if (result === "failed") console.error("Zatto Desktop could not start.");
 }
 
