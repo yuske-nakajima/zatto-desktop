@@ -19,8 +19,16 @@ const serverExportPath = path.relative(
   sourceServerEntry,
 );
 const sourceWebDirectory = path.join(sourcePackageDirectory, "dist", "web");
-const { archivePath } = await resolvePackagedAppPaths();
+const { archivePath, iconPath } = await resolvePackagedAppPaths();
 const sourcePackage = JSON.parse(await readFile(sourcePackagePath, "utf8"));
+const sourceIconPath = path.resolve("assets/icons/zatto-desktop.icns");
+const [sourceIcon, packagedIcon] = await Promise.all([
+  readFile(sourceIconPath),
+  readFile(iconPath),
+]);
+if (!sourceIcon.equals(packagedIcon)) {
+  throw new Error("Packaged application does not contain the branded icon");
+}
 
 const preloadBundlePath = path.join(
   ".webpack",
@@ -96,7 +104,7 @@ if (!webFiles.includes("index.html")) {
 }
 
 console.log(
-  `Packaged zatto contents and restricted preload verified: ${webFiles.length} web files`,
+  `Packaged zatto contents, icon, and restricted preload verified: ${webFiles.length} web files`,
 );
 
 function assertArchiveFile(relativePath) {

@@ -1,7 +1,27 @@
 # Zatto Desktop
 
+<p align="center">
+  <img src="assets/icons/zatto-desktop.png" alt="Zatto Desktopのアプリアイコン" width="160" height="160" />
+</p>
+
 Zatto Desktopは、zattoをmacOSで利用するためのElectronアプリです。
 このリポジトリには、Electronシェルと静的な準備画面を実装しています。
+
+## ブランディング
+
+重なったHTMLカードがZの形に見えるアイコンを採用しています。
+1024pxの原画とmacOS、Windows、Linux向けの形式を管理しています。
+
+- `assets/brand/zatto-desktop-master.png`: 1024pxの透過原画
+- `assets/icons/zatto-desktop.icns`: macOS向けアイコン
+- `assets/icons/zatto-desktop.ico`: Windows向けアイコン
+- `assets/icons/zatto-desktop.png`: Linux向け512pxアイコン
+
+ImageMagickを利用できる環境では、原画から各形式を再生成できます。
+
+```sh
+pnpm icons:generate
+```
 
 ## 必要な環境
 

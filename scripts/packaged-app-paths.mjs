@@ -5,7 +5,7 @@ import path from "node:path";
  * Resolves the single macOS application produced by Electron Forge.
  *
  * @param {string} outputDirectory - Forge output directory
- * @returns {Promise<{ archivePath: string; executablePath: string }>} Packaged application paths
+ * @returns {Promise<{ archivePath: string; executablePath: string; iconPath: string }>} Packaged application paths
  * @throws {Error} When the output directory does not contain exactly one application
  */
 export async function resolvePackagedAppPaths(
@@ -40,6 +40,12 @@ export async function resolvePackagedAppPaths(
       "Contents",
       "MacOS",
       "Zatto Desktop",
+    ),
+    iconPath: path.join(
+      applicationDirectory,
+      "Contents",
+      "Resources",
+      "electron.icns",
     ),
   };
 }
