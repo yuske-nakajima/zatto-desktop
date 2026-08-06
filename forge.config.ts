@@ -138,6 +138,7 @@ const config: ForgeConfig = {
   packagerConfig: {
     appBundleId: "com.yuskenakajima.zatto-desktop",
     asar: true,
+    icon: path.resolve("assets/icons/zatto-desktop"),
     ...resolveMacosDistributionConfig(process.env),
   },
   rebuildConfig: {},

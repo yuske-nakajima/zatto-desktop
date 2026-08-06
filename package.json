@@ -10,6 +10,7 @@
     "node": ">=24.18.0"
   },
   "scripts": {
+    "icons:generate": "node scripts/generate-app-icons.mjs",
     "start": "node scripts/run-forge.mjs start",
     "smoke:dev": "node scripts/run-forge.mjs start -- --smoke-test-zatto-server",
     "smoke:packaged": "node scripts/verify-packaged-contents.mjs && node scripts/run-packaged-smoke.mjs",
