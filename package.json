@@ -1,45 +1,23 @@
 {
-  "name": "zatto-desktop",
-  "productName": "zatto",
-  "version": "0.1.5",
-  "description": "macOS desktop shell for zatto",
-  "main": ".webpack/main",
+  "name": "zatto-desktop-workspace",
   "private": true,
   "packageManager": "pnpm@11.17.0",
   "engines": {
     "node": ">=24.18.0"
   },
   "scripts": {
-    "icons:generate": "node scripts/generate-app-icons.mjs",
-    "start": "node scripts/run-forge.mjs start",
-    "smoke:dev": "node scripts/run-forge.mjs start -- --smoke-test-zatto-server",
-    "smoke:packaged": "node scripts/verify-packaged-contents.mjs && node scripts/run-packaged-smoke.mjs",
-    "package": "node scripts/run-forge.mjs package",
-    "make": "node scripts/run-forge.mjs make && node scripts/verify-packaged-contents.mjs",
+    "icons:generate": "pnpm --filter zatto-desktop icons:generate",
+    "start": "pnpm --filter zatto-desktop start",
+    "smoke:dev": "pnpm --filter zatto-desktop smoke:dev",
+    "smoke:packaged": "pnpm --filter zatto-desktop smoke:packaged",
+    "package": "pnpm --filter zatto-desktop package",
+    "make": "pnpm --filter zatto-desktop make",
     "check": "pnpm run typecheck && biome check .",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "pnpm --recursive --if-present typecheck",
     "format": "biome check --write .",
-    "test": "vitest run"
-  },
-  "dependencies": {
-    "@yuske-nakajima/zatto": "0.1.3"
+    "test": "pnpm --recursive --if-present test"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.5",
-    "@electron-forge/cli": "7.11.2",
-    "@electron-forge/maker-zip": "7.11.2",
-    "@electron-forge/plugin-webpack": "7.11.2",
-    "@electron-forge/shared-types": "7.11.2",
-    "@electron/asar": "3.4.1",
-    "@types/node": "24.10.13",
-    "css-loader": "7.1.2",
-    "electron": "43.3.0",
-    "esbuild": "0.28.1",
-    "esbuild-loader": "4.5.0",
-    "style-loader": "4.0.0",
-    "typescript": "7.0.2",
-    "vitest": "4.1.10",
-    "webpack": "5.104.1",
-    "webpack-cli": "6.0.1"
+    "@biomejs/biome": "2.5.5"
   }
 }

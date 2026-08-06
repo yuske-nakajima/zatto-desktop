@@ -24,9 +24,9 @@ jobs:
       - name: Resolve release version
         id: release
         run: |
-          version="$(node -p 'require("./package.json").version')"
+          version="$(node -p 'require("./apps/desktop/package.json").version')"
           if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.-]+)?$ ]]; then
-            echo "::error::package.json version is not a release version"
+            echo "::error::apps/desktop/package.json version is not a release version"
             exit 1
           fi
           tag="v${version}"
@@ -87,8 +87,8 @@ jobs:
       - name: Verify signature and Gatekeeper acceptance
         id: artifact
         run: |
-          app_path="$(find out -type d -name 'zatto.app' -print -quit)"
-          artifact_path="$(find out/make -type f -name '*-${{ steps.release.outputs.version }}.zip' -print -quit)"
+          app_path="$(find apps/desktop/out -type d -name 'zatto.app' -print -quit)"
+          artifact_path="$(find apps/desktop/out/make -type f -name '*-${{ steps.release.outputs.version }}.zip' -print -quit)"
           if [[ -z "$app_path" || -z "$artifact_path" ]]; then
             echo "::error::Release application or ZIP was not generated"
             exit 1

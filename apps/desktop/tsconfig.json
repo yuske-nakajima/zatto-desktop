@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.json",
+  "include": [
+    "forge.config.ts",
+    "webpack.*.ts",
+    "src/**/*.ts",
+    "tests/**/*.ts",
+    "vitest.config.mts"
+  ]
+}

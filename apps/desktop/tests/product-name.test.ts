@@ -1,9 +1,13 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { findRepositoryRoot } from "./repository-root";
 
 const repositoryFile = (relativePath: string) =>
   readFile(path.resolve(relativePath), "utf8");
+const repositoryRoot = findRepositoryRoot();
+const rootFile = (relativePath: string) =>
+  readFile(path.join(repositoryRoot, relativePath), "utf8");
 
 describe("zatto product name", () => {
   it("uses zatto for the packaged application", async () => {
@@ -24,7 +28,7 @@ describe("zatto product name", () => {
     const [renderer, errorScreen, workflow] = await Promise.all([
       repositoryFile("src/renderer/index.html"),
       repositoryFile("src/main/window-error-screen.ts"),
-      repositoryFile(".github/workflows/release.yml"),
+      rootFile(".github/workflows/release.yml"),
     ]);
 
     expect(renderer).toContain("<title>zatto</title>");

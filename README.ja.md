@@ -1,7 +1,7 @@
 # zatto
 
 <p align="center">
-  <img src="assets/icons/zatto-desktop.png" alt="zattoのアプリアイコン" width="160" height="160" />
+  <img src="apps/desktop/assets/icons/zatto-desktop.png" alt="zattoのアプリアイコン" width="160" height="160" />
 </p>
 
 [English](./README.md)
@@ -52,6 +52,16 @@ macOSで視差効果を減らす設定を有効にしている場合は、表示
 ## 開発
 
 ここからは、デスクトップアプリの開発へ参加する人向けの情報です。
+
+### リポジトリ構成
+
+このリポジトリはpnpm workspaceで管理します。
+
+- `apps/desktop`: Electronデスクトップアプリ
+- `apps/site`: 製品サイトの実装時に追加するworkspace
+
+共通のmise、pnpm、TypeScript、Biome、CI、Release設定はリポジトリルートで管理します。
+記載しているコマンドはリポジトリルートから実行してください。
 
 ### 環境構築
 
@@ -152,10 +162,10 @@ API、外部origin、フォーム送信、同一origin権限、親画面、zatto
 重なったHTMLカードがZの形に見えるアイコンを採用しています。
 1024pxの透過原画と、各プラットフォーム向けの形式を管理しています。
 
-- `assets/brand/zatto-desktop-master.png`: 原画
-- `assets/icons/zatto-desktop.icns`: macOS
-- `assets/icons/zatto-desktop.ico`: Windows
-- `assets/icons/zatto-desktop.png`: Linux
+- `apps/desktop/assets/brand/zatto-desktop-master.png`: 原画
+- `apps/desktop/assets/icons/zatto-desktop.icns`: macOS
+- `apps/desktop/assets/icons/zatto-desktop.ico`: Windows
+- `apps/desktop/assets/icons/zatto-desktop.png`: Linux
 
 ImageMagickを利用できる環境では、各形式を再生成できます。
 
@@ -165,8 +175,8 @@ pnpm icons:generate
 
 ### バージョンとmacOS向けRelease
 
-デスクトップアプリのバージョンは`0.1.5`です。
-`package.json`を正として管理します。
+デスクトップアプリのバージョンは`0.1.6`です。
+`apps/desktop/package.json`を正として管理します。
 
 GitHub Actionsの`Release` workflowを`main`から手動実行します。
 workflowはpackage versionを読み取り、品質検査とsmoke testを実行します。
