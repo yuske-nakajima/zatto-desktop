@@ -45,6 +45,13 @@ describe("preload file drop", () => {
     );
     expect(harness.styleText()).toContain("prefers-reduced-motion: reduce");
     expect(harness.styleText()).toContain("position: fixed");
+    expect(harness.styleText()).toContain("background: rgb(15 23 42 / 82%)");
+    expect(harness.styleText()).toContain(
+      "border: 1px solid rgb(255 255 255 / 72%)",
+    );
+    expect(harness.styleText()).not.toContain("gradient(");
+    expect(harness.styleText()).not.toContain("box-shadow");
+    expect(harness.styleText()).not.toContain("@keyframes");
   });
 
   it("does not let a previous drop timer close a later drag", async () => {

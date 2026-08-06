@@ -32,7 +32,7 @@ export function createHtmlFileDropShield(
   icon.dataset.part = "icon";
   icon.setAttribute("aria-hidden", "true");
   const title = ownerDocument.createElement("strong");
-  title.textContent = "DROP HTML";
+  title.textContent = "Drop HTML";
   const count = ownerDocument.createElement("span");
   count.id = COUNT_ID;
   count.textContent = "Drop HTML files anywhere";
