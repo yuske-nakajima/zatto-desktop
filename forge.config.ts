@@ -29,6 +29,64 @@ const sourceZattoWebDirectory = path.join(
   "dist",
   "web",
 );
+function optionalEnvironmentValue(
+  environment: NodeJS.ProcessEnv,
+  name: string,
+): string | undefined {
+  const value = environment[name]?.trim();
+  return value === "" ? undefined : value;
+}
+
+export function resolveMacosDistributionConfig(
+  environment: NodeJS.ProcessEnv,
+): ForgeConfig["packagerConfig"] {
+  const macosSigningIdentity = optionalEnvironmentValue(
+    environment,
+    "MACOS_SIGNING_IDENTITY",
+  );
+  const appleId = optionalEnvironmentValue(environment, "APPLE_ID");
+  const appleAppSpecificPassword = optionalEnvironmentValue(
+    environment,
+    "APPLE_APP_SPECIFIC_PASSWORD",
+  );
+  const appleTeamId = optionalEnvironmentValue(environment, "APPLE_TEAM_ID");
+  const values = {
+    APPLE_APP_SPECIFIC_PASSWORD: appleAppSpecificPassword,
+    APPLE_ID: appleId,
+    APPLE_TEAM_ID: appleTeamId,
+    MACOS_SIGNING_IDENTITY: macosSigningIdentity,
+  };
+  const configuredValues = Object.values(values).filter(
+    (value) => value !== undefined,
+  );
+  if (configuredValues.length === 0) return {};
+  const missingNames = Object.entries(values)
+    .filter(([, value]) => value === undefined)
+    .map(([name]) => name);
+  if (
+    missingNames.length > 0 ||
+    appleId === undefined ||
+    appleAppSpecificPassword === undefined ||
+    appleTeamId === undefined ||
+    macosSigningIdentity === undefined
+  ) {
+    throw new Error(
+      `macOS distribution requires environment variables: ${missingNames.join(", ")}`,
+    );
+  }
+
+  return {
+    osxNotarize: {
+      appleId,
+      appleIdPassword: appleAppSpecificPassword,
+      teamId: appleTeamId,
+    },
+    osxSign: {
+      identity: macosSigningIdentity,
+      optionsForFile: () => ({ hardenedRuntime: true }),
+    },
+  };
+}
 
 async function bundleZattoServer(buildPath: string): Promise<void> {
   const outputEntry = path.join(
@@ -78,7 +136,9 @@ async function bundleZattoServer(buildPath: string): Promise<void> {
 
 const config: ForgeConfig = {
   packagerConfig: {
+    appBundleId: "com.yuskenakajima.zatto-desktop",
     asar: true,
+    ...resolveMacosDistributionConfig(process.env),
   },
   rebuildConfig: {},
   hooks: {

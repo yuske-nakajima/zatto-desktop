@@ -1,0 +1,113 @@
+name: Release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: macos-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.ref == "refs/heads/main"
+    runs-on: macos-14
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Set up development tools
+        uses: jdx/mise-action@c37c93293d6b742fc901e1406b8f764f6fb19dac # v2.4.4
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Resolve release version
+        id: release
+        run: |
+          version="$(node -p 'require("./package.json").version')"
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::package.json version is not a release version"
+            exit 1
+          fi
+          tag="v${version}"
+          if git ls-remote --exit-code --tags origin "refs/tags/${tag}" >/dev/null 2>&1; then
+            echo "::error::${tag} already exists"
+            exit 1
+          fi
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "tag=${tag}" >> "$GITHUB_OUTPUT"
+      - name: Validate signing secrets
+        env:
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          MACOS_CERTIFICATE_P12: ${{ secrets.MACOS_CERTIFICATE_P12 }}
+          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+          MACOS_SIGNING_IDENTITY: ${{ secrets.MACOS_SIGNING_IDENTITY }}
+        run: |
+          missing=0
+          for name in APPLE_APP_SPECIFIC_PASSWORD APPLE_ID APPLE_TEAM_ID MACOS_CERTIFICATE_P12 MACOS_CERTIFICATE_PASSWORD MACOS_SIGNING_IDENTITY; do
+            if [[ -z "${!name}" ]]; then
+              echo "::error::GitHub Secret ${name} is required"
+              missing=1
+            fi
+          done
+          exit "$missing"
+      - name: Check types, lint, and formatting
+        run: pnpm check
+      - name: Run tests
+        run: pnpm test
+      - name: Probe zatto server in development build
+        run: pnpm smoke:dev
+      - name: Import Developer ID certificate
+        env:
+          MACOS_CERTIFICATE_P12: ${{ secrets.MACOS_CERTIFICATE_P12 }}
+          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+        run: |
+          certificate_path="$RUNNER_TEMP/zatto-desktop-certificate.p12"
+          keychain_path="$RUNNER_TEMP/zatto-desktop-signing.keychain-db"
+          keychain_password="$(openssl rand -base64 32)"
+          umask 077
+          printf '%s' "$MACOS_CERTIFICATE_P12" | base64 -D > "$certificate_path"
+          security create-keychain -p "$keychain_password" "$keychain_path"
+          security set-keychain-settings -lut 21600 "$keychain_path"
+          security unlock-keychain -p "$keychain_password" "$keychain_path"
+          security import "$certificate_path" -P "$MACOS_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k "$keychain_path"
+          security list-keychains -d user -s "$keychain_path"
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$keychain_password" "$keychain_path"
+      - name: Create signed and notarized application
+        env:
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          MACOS_SIGNING_IDENTITY: ${{ secrets.MACOS_SIGNING_IDENTITY }}
+        run: pnpm make
+      - name: Probe zatto server in packaged application
+        run: pnpm smoke:packaged
+      - name: Verify signature and Gatekeeper acceptance
+        id: artifact
+        run: |
+          app_path="$(find out -type d -name 'Zatto Desktop.app' -print -quit)"
+          artifact_path="$(find out/make -type f -name '*-${{ steps.release.outputs.version }}.zip' -print -quit)"
+          if [[ -z "$app_path" || -z "$artifact_path" ]]; then
+            echo "::error::Release application or ZIP was not generated"
+            exit 1
+          fi
+          codesign --verify --deep --strict --verbose=2 "$app_path"
+          spctl --assess --type execute --verbose=2 "$app_path"
+          echo "path=${artifact_path}" >> "$GITHUB_OUTPUT"
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ steps.release.outputs.tag }}" \
+            "${{ steps.artifact.outputs.path }}" \
+            --target "$GITHUB_SHA" \
+            --title "Zatto Desktop ${{ steps.release.outputs.version }}" \
+            --generate-notes \
+            --fail-on-no-commits
+      - name: Remove signing keychain
+        if: always()
+        run: |
+          security delete-keychain "$RUNNER_TEMP/zatto-desktop-signing.keychain-db" 2>/dev/null || true
+          rm -f "$RUNNER_TEMP/zatto-desktop-certificate.p12"
