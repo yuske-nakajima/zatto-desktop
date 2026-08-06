@@ -125,7 +125,48 @@ package metadataと静的UIも検査します。
 
 アプリのバージョンは`0.1.5`です。
 バージョンは`package.json`を正として管理します。
-配布物の署名、公証、公開手順は、この開発基盤に含みません。
+
+## macOS向けRelease
+
+GitHub Actionsの`Release` workflowを`main`から手動実行します。
+workflowは`package.json`のバージョンを読み取ります。
+`v<version>`形式のタグとGitHub Releaseを作成し、ZIPを添付します。
+同じタグが存在する場合は、Releaseを作成しません。
+
+Release前に型検査、Lint、書式検査、テストを実行します。
+開発版とパッケージ版のzattoサーバーも検証します。
+配布用アプリはDeveloper ID Application証明書で署名します。
+Electron ForgeがAppleのnotarytoolで公証し、結果をアプリへstapleします。
+最後にcodesignとGatekeeperで配布用アプリを検証します。
+
+リポジトリのActions Secretsに次の値を登録してください。
+
+- `MACOS_CERTIFICATE_P12`: Developer ID Application証明書と秘密鍵を含むP12ファイルのBase64文字列
+- `MACOS_CERTIFICATE_PASSWORD`: P12ファイルの書き出しパスワード
+- `MACOS_SIGNING_IDENTITY`: `Developer ID Application: 名前 (TEAMID)`形式の署名ID
+- `APPLE_ID`: Apple Developer Programへ登録したApple ID
+- `APPLE_APP_SPECIFIC_PASSWORD`: 公証用のアプリ用パスワード
+- `APPLE_TEAM_ID`: Apple Developer ProgramのTeam ID
+
+証明書とApple認証情報は、リポジトリへ保存しません。
+workflowは証明書を一時キーチェーンへ読み込みます。
+完了時には、一時キーチェーンとP12ファイルを削除します。
+
+### インストールと起動の確認
+
+1. GitHub ReleasesからZIPをダウンロードします。
+2. ZIPを展開し、`Zatto Desktop.app`を`Applications`へ移動します。
+3. Finderから`Zatto Desktop.app`を開きます。
+4. 準備画面の後にzatto UIが表示されることを確認します。
+5. `Command+O`でHTMLファイルを追加できることを確認します。
+6. アプリを終了し、次回起動でもセッションが維持されることを確認します。
+
+Gatekeeperが配布物を受け入れるかコマンドでも確認できます。
+
+```sh
+codesign --verify --deep --strict --verbose=2 "/Applications/Zatto Desktop.app"
+spctl --assess --type execute --verbose=2 "/Applications/Zatto Desktop.app"
+```
 
 ## セキュリティ境界
 
