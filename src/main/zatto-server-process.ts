@@ -52,7 +52,7 @@ function forkZattoProcess(
 ): ZattoServerProcessHandle {
   const child = utilityProcess.fork(request.serverEntry, request.args, {
     env: request.env,
-    serviceName: "Zatto Server",
+    serviceName: "zatto server",
     session: session.fromPartition("zatto-server"),
     stdio: ["ignore", "pipe", "pipe"],
   });

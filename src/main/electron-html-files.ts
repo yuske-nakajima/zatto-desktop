@@ -53,9 +53,7 @@ export function configureElectronHtmlFiles(
       openHtmlFileDialog(options, addFiles)
         .catch(() => reportResult({ status: "failed" }))
         .catch(() => {
-          console.error(
-            "Zatto Desktop could not report an HTML-file dialog failure.",
-          );
+          console.error("zatto could not report an HTML-file dialog failure.");
         }),
     ),
   );

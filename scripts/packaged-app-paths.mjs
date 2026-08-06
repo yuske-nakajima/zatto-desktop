@@ -14,16 +14,13 @@ export async function resolvePackagedAppPaths(
   const entries = await readdir(outputDirectory, { withFileTypes: true });
   const applicationDirectories = entries
     .filter(
-      (entry) =>
-        entry.isDirectory() && entry.name.startsWith("Zatto Desktop-darwin-"),
+      (entry) => entry.isDirectory() && entry.name.startsWith("zatto-darwin-"),
     )
-    .map((entry) =>
-      path.join(outputDirectory, entry.name, "Zatto Desktop.app"),
-    );
+    .map((entry) => path.join(outputDirectory, entry.name, "zatto.app"));
 
   if (applicationDirectories.length !== 1) {
     throw new Error(
-      `Expected one packaged Zatto Desktop application, found ${applicationDirectories.length}`,
+      `Expected one packaged zatto application, found ${applicationDirectories.length}`,
     );
   }
 
@@ -39,7 +36,7 @@ export async function resolvePackagedAppPaths(
       applicationDirectory,
       "Contents",
       "MacOS",
-      "Zatto Desktop",
+      "zatto",
     ),
     iconPath: path.join(
       applicationDirectory,

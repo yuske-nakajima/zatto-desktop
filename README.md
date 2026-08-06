@@ -184,6 +184,6 @@ P12 file when it finishes. Certificates and Apple credentials are not stored in 
 Verify an installed release with codesign and Gatekeeper.
 
 ```sh
-codesign --verify --deep --strict --verbose=2 "/Applications/Zatto Desktop.app"
-spctl --assess --type execute --verbose=2 "/Applications/Zatto Desktop.app"
+codesign --verify --deep --strict --verbose=2 "/Applications/zatto.app"
+spctl --assess --type execute --verbose=2 "/Applications/zatto.app"
 ```

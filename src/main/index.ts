@@ -27,7 +27,7 @@ function getWorkAreas() {
 
 function settleWindowTask(operation: Promise<unknown>): void {
   void operation.catch(() => {
-    console.error("Zatto Desktop could not update its application window.");
+    console.error("zatto could not update its application window.");
   });
 }
 
@@ -36,12 +36,11 @@ if (!isZattoServerProbe) {
     "before-quit",
     createZattoServerQuitHandler({
       quit: () => app.quit(),
-      reportError: () =>
-        console.error("Zatto Desktop could not stop its server."),
+      reportError: () => console.error("zatto could not stop its server."),
       stop: createStateFlushingStop({
         flushState: () => applicationWindow?.flush() ?? Promise.resolve(),
         reportStateError: () =>
-          console.error("Zatto Desktop could not save its window state."),
+          console.error("zatto could not save its window state."),
         stopServer: () => zattoServerManager?.stop() ?? Promise.resolve(),
       }),
     }),
@@ -53,7 +52,7 @@ async function runProbe(): Promise<void> {
     app.getAppPath(),
     app.getPath("userData"),
   );
-  console.log("Zatto server probe passed:", JSON.stringify(result));
+  console.log("zatto server probe passed:", JSON.stringify(result));
   app.exit(0);
 }
 
@@ -77,7 +76,7 @@ async function startApplication(): Promise<void> {
   );
   zattoServerManager = manager;
   manager.setUnexpectedErrorHandler(() => {
-    console.error("Zatto Desktop server stopped unexpectedly.");
+    console.error("zatto server stopped unexpectedly.");
     settleWindowTask(window.loadError());
   });
   app.on("activate", () => {
@@ -105,11 +104,11 @@ async function startApplication(): Promise<void> {
       getWindow: () => window.getWindow(),
     });
   }
-  if (result === "failed") console.error("Zatto Desktop could not start.");
+  if (result === "failed") console.error("zatto could not start.");
 }
 
 function reportFatalStartupFailure(): void {
-  console.error("Zatto Desktop could not start.");
+  console.error("zatto could not start.");
   if (isZattoServerProbe) {
     app.exit(1);
     return;

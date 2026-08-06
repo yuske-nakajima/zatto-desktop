@@ -17,7 +17,7 @@ export async function reportHtmlFileAddResult(
   if (message === undefined) return;
   const options = {
     message,
-    title: "Zatto Desktop",
+    title: "zatto",
     type: "error" as const,
   };
   if (window === undefined || window.isDestroyed()) {

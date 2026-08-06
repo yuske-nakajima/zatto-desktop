@@ -30,7 +30,7 @@ describe("reportHtmlFileAddResult", () => {
     );
     expect(electron.showMessageBox).toHaveBeenCalledWith(window, {
       message,
-      title: "Zatto Desktop",
+      title: "zatto",
       type: "error",
     });
     expect(message).not.toContain("/");

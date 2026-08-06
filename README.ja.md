@@ -188,6 +188,6 @@ workflowは証明書を一時キーチェーンへ読み込み、完了時にキ
 インストール済みの配布物は、codesignとGatekeeperで検証できます。
 
 ```sh
-codesign --verify --deep --strict --verbose=2 "/Applications/Zatto Desktop.app"
-spctl --assess --type execute --verbose=2 "/Applications/Zatto Desktop.app"
+codesign --verify --deep --strict --verbose=2 "/Applications/zatto.app"
+spctl --assess --type execute --verbose=2 "/Applications/zatto.app"
 ```

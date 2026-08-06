@@ -1,7 +1,7 @@
 import { app, type BrowserWindow, dialog } from "electron";
 
 const FALLBACK_ERROR_URL =
-  "data:text/html;charset=utf-8,%3Ctitle%3EZatto%20Desktop%3C%2Ftitle%3E%3Cmain%3E%3Ch1%3EZatto%20Desktop%20could%20not%20start%3C%2Fh1%3E%3Cp%3EClose%20the%20application%20and%20try%20again.%3C%2Fp%3E%3C%2Fmain%3E";
+  "data:text/html;charset=utf-8,%3Ctitle%3Ezatto%3C%2Ftitle%3E%3Cmain%3E%3Ch1%3Ezatto%20could%20not%20start%3C%2Fh1%3E%3Cp%3EClose%20the%20application%20and%20try%20again.%3C%2Fp%3E%3C%2Fmain%3E";
 
 /**
  * Loads bundled, data-URL, then native error UI for an active window.
@@ -25,24 +25,24 @@ export async function loadWindowErrorScreen(
       if (!isActive()) return "closed";
     }
   }
-  console.error("Zatto Desktop could not display its error screen.");
+  console.error("zatto could not display its error screen.");
   try {
     dialog.showErrorBox(
-      "Zatto Desktop could not start",
+      "zatto could not start",
       "Close the application and try again.",
     );
   } catch {
-    console.error("Zatto Desktop could not display its native error.");
+    console.error("zatto could not display its native error.");
   }
   try {
     window.hide();
   } catch {
-    console.error("Zatto Desktop could not hide its failed window.");
+    console.error("zatto could not hide its failed window.");
   }
   try {
     app.quit();
   } catch {
-    console.error("Zatto Desktop could not request application shutdown.");
+    console.error("zatto could not request application shutdown.");
   }
   return "quitting";
 }

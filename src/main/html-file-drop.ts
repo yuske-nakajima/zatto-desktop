@@ -52,9 +52,7 @@ export function registerHtmlFileDrop<Window extends DropWindow = BrowserWindow>(
       .then(dependencies.reportResult)
       .catch(() => dependencies.reportResult({ status: "failed" }))
       .catch(() => {
-        console.error(
-          "Zatto Desktop could not report an HTML-file add failure.",
-        );
+        console.error("zatto could not report an HTML-file add failure.");
       });
   });
 }
