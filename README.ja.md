@@ -15,10 +15,12 @@
 ## 対応OS
 
 - macOS: GitHub Releasesから利用可能
-- Windows: 対応予定
+- Windows: CIからアプリとインストーラーを利用可能、GitHub Releaseでの配布は対応予定
 - Linux: 対応予定
 
 ## インストール
+
+### macOS
 
 [GitHub Releases](https://github.com/yuske-nakajima/zatto-desktop/releases)から
 最新のmacOS向けZIPをダウンロードします。
@@ -26,6 +28,26 @@ ZIPを展開し、アプリを`Applications`へ移動してください。
 
 Finderからアプリを開きます。
 短い準備画面の後に、`zatto`のビューアーが表示されます。
+
+### Windows
+
+[CI workflow](https://github.com/yuske-nakajima/zatto-desktop/actions/workflows/ci.yml)で
+成功した`main`の実行結果を開きます。
+`zatto-windows-installer` artifactをダウンロードし、展開してください。
+workflow artifactのダウンロードにはGitHubへのサインインが必要です。
+展開した`zatto-Setup.exe`を実行します。
+インストーラーは、スタートメニューとWindowsのインストール済みアプリ設定へ
+`zatto`を追加します。
+
+Windows版は未署名です。
+Microsoft Defender SmartScreenは、発行元が不明であるという警告を表示する場合があります。
+インストーラーの取得元が
+[`yuske-nakajima/zatto-desktop`](https://github.com/yuske-nakajima/zatto-desktop)
+の公式リポジトリであることを確認してください。
+確認後に「詳細情報 > 実行」を選択します。
+
+複数OS向けRelease workflowを実装するまでは、GitHub ReleaseでmacOS版だけを配布します。
+CIはWindows runnerでWindows向けインストーラーをビルドし、検証します。
 
 ## HTMLファイルの追加
 
@@ -72,7 +94,7 @@ OSで視差効果を減らす設定を有効にしている場合は、表示時
 
 ### 環境構築
 
-現在の開発環境にはmacOSと[mise](https://mise.jdx.dev/)が必要です。
+開発環境はmacOSとWindowsで検証し、[mise](https://mise.jdx.dev/)を使用します。
 `.mise.toml`でNode.js 24.18.0とpnpm 11.17.0を固定しています。
 
 ```sh
@@ -88,7 +110,7 @@ pnpmの依存レイアウトはhoistedへ固定しています。
 minimum release ageの除外対象は、必要なパッケージとメタデータだけです。
 
 Node.js 26.6.0でも型検査、単体テスト、開発スモークテストは成功します。
-一方、Electron Forgeは終了コード0のままパッケージのfinalizeで停止し、
+一方、macOSではElectron Forgeが終了コード0のままパッケージのfinalizeで停止し、
 `.app`を生成しません。成果物を確実に生成できるNode.js 24.18.0を使用しています。
 
 ### コマンド
@@ -112,7 +134,8 @@ pnpm smoke:packaged
 - `pnpm check`: 型検査、Lint、書式検査
 - `pnpm test`: Vitestによるテスト
 - `pnpm smoke:dev`: 開発版の起動、health、認証付きshutdownを検証
-- `pnpm make`: macOS向けZIPを作成し、パッケージ内のzatto構成を検査
+- `pnpm make`: macOS向けZIPまたはWindows向けインストーラーを作成し、
+  パッケージ内のzatto構成を検査
 - `pnpm smoke:packaged`: ASARと生成済みアプリのサーバーを検証
 
 ### デスクトップアプリの構成
@@ -182,7 +205,7 @@ pnpm icons:generate
 
 ### バージョンとmacOS向けRelease
 
-デスクトップアプリのバージョンは`0.1.7`です。
+デスクトップアプリのバージョンは`0.1.8`です。
 `apps/desktop/package.json`を正として管理します。
 
 GitHub Actionsの`Release` workflowを`main`から手動実行します。
