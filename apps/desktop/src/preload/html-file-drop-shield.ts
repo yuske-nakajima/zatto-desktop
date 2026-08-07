@@ -4,7 +4,7 @@ const SHIELD_ID = "zatto-desktop-drop-shield";
 const COUNT_ID = "zatto-desktop-drop-count";
 const ACTIVE_ATTRIBUTE = "data-zatto-desktop-drop";
 
-/** Visual states controlled by the Finder file-drop workflow. */
+/** Visual states controlled by the file-manager drop workflow. */
 export interface HtmlFileDropShield {
   hide: () => void;
   markDropped: () => void;

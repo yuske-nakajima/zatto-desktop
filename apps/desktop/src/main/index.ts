@@ -2,6 +2,8 @@ import { app, BrowserWindow, screen } from "electron";
 import {
   createStateFlushingStop,
   createZattoServerQuitHandler,
+  shouldQuitAfterAllWindowsClosed,
+  shouldRecreateWindowOnActivate,
 } from "./app-lifecycle";
 import { ApplicationWindow } from "./application-window";
 import { configureElectronHtmlFiles } from "./electron-html-files";
@@ -80,7 +82,10 @@ async function startApplication(): Promise<void> {
     settleWindowTask(window.loadError());
   });
   app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
+    if (
+      shouldRecreateWindowOnActivate(process.platform) &&
+      BrowserWindow.getAllWindows().length === 0
+    ) {
       settleWindowTask(window.recreateForManagerState());
     }
   });
@@ -121,5 +126,5 @@ function reportFatalStartupFailure(): void {
 void app.whenReady().then(startApplication).catch(reportFatalStartupFailure);
 
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") app.quit();
+  if (shouldQuitAfterAllWindowsClosed(process.platform)) app.quit();
 });

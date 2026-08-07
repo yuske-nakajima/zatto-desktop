@@ -21,13 +21,15 @@ const serverExportPath = path.relative(
 const sourceWebDirectory = path.join(sourcePackageDirectory, "dist", "web");
 const { archivePath, iconPath } = await resolvePackagedAppPaths();
 const sourcePackage = JSON.parse(await readFile(sourcePackagePath, "utf8"));
-const sourceIconPath = path.resolve("assets/icons/zatto-desktop.icns");
-const [sourceIcon, packagedIcon] = await Promise.all([
-  readFile(sourceIconPath),
-  readFile(iconPath),
-]);
-if (!sourceIcon.equals(packagedIcon)) {
-  throw new Error("Packaged application does not contain the branded icon");
+if (iconPath !== undefined) {
+  const sourceIconPath = path.resolve("assets/icons/zatto-desktop.icns");
+  const [sourceIcon, packagedIcon] = await Promise.all([
+    readFile(sourceIconPath),
+    readFile(iconPath),
+  ]);
+  if (!sourceIcon.equals(packagedIcon)) {
+    throw new Error("Packaged application does not contain the branded icon");
+  }
 }
 
 const preloadBundlePath = path.join(

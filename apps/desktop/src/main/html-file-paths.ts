@@ -45,7 +45,7 @@ export async function prepareHtmlFilePaths(
         canonicalPaths.add(canonicalPath);
       }
     } catch {
-      // Files can disappear between Finder selection and validation.
+      // Files can disappear between file-manager selection and validation.
     }
   }
   return canonicalPaths.size === 0

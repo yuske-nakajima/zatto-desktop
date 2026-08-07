@@ -130,7 +130,7 @@ export class ApplicationWindow {
   }
 
   /**
-   * Creates a closed macOS window again with manager-state content.
+   * Creates a closed application window again with manager-state content.
    *
    * @returns Completion of state-matched content loading
    */

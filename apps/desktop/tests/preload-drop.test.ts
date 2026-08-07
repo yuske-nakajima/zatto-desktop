@@ -18,7 +18,7 @@ describe("preload file drop", () => {
     electron.send.mockClear();
   });
 
-  it("opens a full-window shield for Finder files and shows the HTML count", async () => {
+  it("opens a full-window shield for native files and shows the HTML count", async () => {
     const harness = createDocumentHarness();
     vi.stubGlobal("document", harness.document);
     await import("../src/preload/index.js");
@@ -106,7 +106,7 @@ describe("preload file drop", () => {
     );
   });
 
-  it("resolves Finder files inside preload and sends only HTML paths", async () => {
+  it("resolves file-manager files inside preload and sends only HTML paths", async () => {
     const harness = createDocumentHarness();
     vi.stubGlobal("document", harness.document);
     await import("../src/preload/index.js");

@@ -16,7 +16,7 @@ export interface ElectronHtmlFileOptions {
 }
 
 /**
- * Installs the native menu and restricted Finder-drop endpoint.
+ * Installs the native menu and restricted file-manager drop endpoint.
  *
  * @param options - Current application window and server-state accessors
  * @returns Nothing

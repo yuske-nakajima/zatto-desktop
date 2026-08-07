@@ -12,16 +12,8 @@ const rootFile = (relativePath: string) =>
 describe("zatto product name", () => {
   it("uses zatto for the packaged application", async () => {
     const packageMetadata = JSON.parse(await repositoryFile("package.json"));
-    const packagedPaths = await repositoryFile(
-      "scripts/packaged-app-paths.mjs",
-    );
 
     expect(packageMetadata.productName).toBe("zatto");
-    expect(packagedPaths).toContain('entry.name.startsWith("zatto-darwin-")');
-    expect(packagedPaths).toContain(
-      'path.join(outputDirectory, entry.name, "zatto.app")',
-    );
-    expect(packagedPaths).toContain('"MacOS",\n      "zatto",');
   });
 
   it("uses zatto in user-visible application text", async () => {
