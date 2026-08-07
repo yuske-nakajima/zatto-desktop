@@ -1,4 +1,4 @@
-import { Menu, type MenuItemConstructorOptions } from "electron";
+import type { MenuItemConstructorOptions } from "electron";
 
 /**
  * Builds the platform application menu containing the HTML-file open command.
@@ -28,17 +28,4 @@ export function createApplicationMenuTemplate(
     { role: "windowMenu" },
   ];
   return platform === "darwin" ? [{ role: "appMenu" }, ...menus] : menus;
-}
-
-/**
- * Installs the native application menu.
- *
- * @param openFiles - Operation invoked by file selection
- * @returns Nothing
- * @throws When Electron cannot construct or install the menu
- */
-export function installApplicationMenu(openFiles: () => void): void {
-  Menu.setApplicationMenu(
-    Menu.buildFromTemplate(createApplicationMenuTemplate(openFiles)),
-  );
 }

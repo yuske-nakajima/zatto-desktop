@@ -1,8 +1,8 @@
-import { type BrowserWindow, dialog, ipcMain } from "electron";
+import { type BrowserWindow, dialog, ipcMain, Menu } from "electron";
 import { addHtmlFiles } from "./html-file-add";
 import { chooseHtmlFiles } from "./html-file-dialog";
 import { registerHtmlFileDrop } from "./html-file-drop";
-import { installApplicationMenu } from "./html-file-menu";
+import { createApplicationMenuTemplate } from "./html-file-menu";
 import { showAddedHtmlEntry } from "./html-file-navigation";
 import { requestHtmlFileAdd } from "./html-file-request";
 import { reportHtmlFileAddResult } from "./html-file-result";
@@ -48,14 +48,15 @@ export function configureElectronHtmlFiles(
     ipcMain,
     reportResult,
   });
-  installApplicationMenu(
-    createSingleFlightAction(() =>
-      openHtmlFileDialog(options, addFiles)
-        .catch(() => reportResult({ status: "failed" }))
-        .catch(() => {
-          console.error("zatto could not report an HTML-file dialog failure.");
-        }),
-    ),
+  const openFiles = createSingleFlightAction(() =>
+    openHtmlFileDialog(options, addFiles)
+      .catch(() => reportResult({ status: "failed" }))
+      .catch(() => {
+        console.error("zatto could not report an HTML-file dialog failure.");
+      }),
+  );
+  Menu.setApplicationMenu(
+    Menu.buildFromTemplate(createApplicationMenuTemplate(openFiles)),
   );
 }
 
