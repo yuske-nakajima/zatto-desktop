@@ -3,6 +3,11 @@ import { createRequire } from "node:module";
 import path from "node:path";
 import { isDeepStrictEqual } from "node:util";
 import { extractFile, statFile } from "@electron/asar";
+import {
+  resolveDebianArchitecture,
+  resolveDebianPackagePath,
+  verifyDebianPackage,
+} from "./debian-package.mjs";
 import { resolvePackagedAppPaths } from "./packaged-app-paths.mjs";
 
 const zattoPackageDirectory = path.join(
@@ -21,8 +26,14 @@ const serverExportPath = path.relative(
 const sourceWebDirectory = path.join(sourcePackageDirectory, "dist", "web");
 const { archivePath, iconPath } = await resolvePackagedAppPaths();
 const sourcePackage = JSON.parse(await readFile(sourcePackagePath, "utf8"));
+const desktopPackage = JSON.parse(
+  await readFile(path.resolve("package.json"), "utf8"),
+);
 if (iconPath !== undefined) {
-  const sourceIconPath = path.resolve("assets/icons/zatto-desktop.icns");
+  const iconExtension = process.platform === "darwin" ? "icns" : "png";
+  const sourceIconPath = path.resolve(
+    `assets/icons/zatto-desktop.${iconExtension}`,
+  );
   const [sourceIcon, packagedIcon] = await Promise.all([
     readFile(sourceIconPath),
     readFile(iconPath),
@@ -30,6 +41,20 @@ if (iconPath !== undefined) {
   if (!sourceIcon.equals(packagedIcon)) {
     throw new Error("Packaged application does not contain the branded icon");
   }
+}
+
+if (process.platform === "linux") {
+  const packagePath = await resolveDebianPackagePath(
+    path.resolve("out"),
+    desktopPackage.version,
+    process.arch,
+  );
+  await verifyDebianPackage(
+    packagePath,
+    desktopPackage.version,
+    resolveDebianArchitecture(process.arch),
+    path.resolve("assets/icons/zatto-desktop.png"),
+  );
 }
 
 const preloadBundlePath = path.join(

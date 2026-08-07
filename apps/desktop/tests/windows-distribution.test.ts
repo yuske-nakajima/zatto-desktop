@@ -40,10 +40,10 @@ describe("Windows distribution", () => {
     expect(mainSource).not.toContain("if (isSquirrelStartup) app.quit();");
   });
 
-  it("runs the complete desktop verification on macOS and Windows", async () => {
+  it("runs the complete desktop verification on every supported OS", async () => {
     const workflow = await repositoryFile(".github/workflows/ci.yml");
 
-    expect(workflow).toContain("os: [macos-14, windows-2025]");
+    expect(workflow).toContain("os: [macos-14, ubuntu-24.04, windows-2025]");
     expect(workflow).toMatch(/runs-on: \$\{\{ matrix\.os \}\}/);
     expect(workflow).toContain("pnpm check");
     expect(workflow).toContain("pnpm test");

@@ -19,6 +19,7 @@ import {
 export interface ApplicationWindowOptions {
   getManagerState: () => WindowManagerState;
   getWorkAreas: () => readonly WindowBounds[];
+  iconPath?: string;
   preloadUrl: string;
   rendererUrl: string;
   userDataPath: string;
@@ -28,6 +29,7 @@ export interface ApplicationWindowOptions {
 export class ApplicationWindow {
   private readonly getManagerState: () => WindowManagerState;
   private readonly getWorkAreas: () => readonly WindowBounds[];
+  private readonly iconPath?: string;
   private readonly preloadUrl: string;
   private readonly rendererEntry: string;
   private recreation?: Promise<void>;
@@ -43,6 +45,7 @@ export class ApplicationWindow {
   constructor(options: ApplicationWindowOptions) {
     this.getManagerState = options.getManagerState;
     this.getWorkAreas = options.getWorkAreas;
+    this.iconPath = options.iconPath;
     this.preloadUrl = options.preloadUrl;
     this.rendererEntry = options.rendererUrl;
     this.stateStore = new WindowStateStore(options.userDataPath);
@@ -175,7 +178,11 @@ export class ApplicationWindow {
 
   private create(): BrowserWindow {
     this.state = normalizeWindowState(this.state, this.getWorkAreas());
-    const options = createMainWindowOptions(this.preloadUrl, this.state.bounds);
+    const options = createMainWindowOptions(
+      this.preloadUrl,
+      this.state.bounds,
+      this.iconPath,
+    );
     const window = new BrowserWindow(options);
     configureElectronWindowSecurity(
       window.webContents,

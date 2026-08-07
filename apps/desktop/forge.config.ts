@@ -1,12 +1,14 @@
 import { cp, mkdir, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import path from "node:path";
+import { MakerDeb } from "@electron-forge/maker-deb";
 import { MakerSquirrel } from "@electron-forge/maker-squirrel";
 import { MakerZIP } from "@electron-forge/maker-zip";
 import { WebpackPlugin } from "@electron-forge/plugin-webpack";
 import type { ForgeConfig } from "@electron-forge/shared-types";
 import zattoPackage from "@yuske-nakajima/zatto/package.json";
 import { build } from "esbuild";
+import { resolveLinuxMakerConfig } from "./linux-maker-config";
 import { resolvePlatformIconPath } from "./src/main/platform-assets";
 import { mainConfig } from "./webpack.main.config";
 import { rendererConfig } from "./webpack.renderer.config";
@@ -32,6 +34,8 @@ const sourceZattoWebDirectory = path.join(
   "dist",
   "web",
 );
+const iconBasePath = path.resolve("assets/icons/zatto-desktop");
+const linuxIconPath = resolvePlatformIconPath(iconBasePath, "linux");
 function optionalEnvironmentValue(
   environment: NodeJS.ProcessEnv,
   name: string,
@@ -141,6 +145,7 @@ const config: ForgeConfig = {
   packagerConfig: {
     appBundleId: "com.yuskenakajima.zatto-desktop",
     asar: true,
+    extraResource: process.platform === "linux" ? [linuxIconPath] : [],
     icon: resolvePlatformIconPath(
       path.resolve("assets/icons/zatto-desktop"),
       process.platform,
@@ -164,6 +169,7 @@ const config: ForgeConfig = {
       ["win32"],
     ),
     new MakerZIP({}, ["darwin"]),
+    new MakerDeb(resolveLinuxMakerConfig(linuxIconPath), ["linux"]),
   ],
   plugins: [
     new WebpackPlugin({

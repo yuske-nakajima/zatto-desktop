@@ -27,6 +27,16 @@ describe("createMainWindowOptions", () => {
     });
   });
 
+  it("uses the Linux PNG for the native window", () => {
+    const options = createMainWindowOptions(
+      "/app/preload.js",
+      undefined,
+      "/app/zatto-desktop.png",
+    );
+
+    expect(options.icon).toBe("/app/zatto-desktop.png");
+  });
+
   it("uses restored bounds without weakening minimum sizes", () => {
     const options = createMainWindowOptions("/app/preload.js", {
       height: 800,

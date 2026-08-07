@@ -14,13 +14,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-14, windows-2025]
+        os: [macos-14, ubuntu-24.04, windows-2025]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - name: Set up development tools
         uses: jdx/mise-action@c37c93293d6b742fc901e1406b8f764f6fb19dac # v2.4.4
+      - name: Install Linux packaging and display tools
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends --yes fakeroot xvfb xauth
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Check types, lint, and formatting
@@ -28,15 +33,50 @@ jobs:
       - name: Run tests
         run: pnpm test
       - name: Probe zatto server in development build
+        if: runner.os != 'Linux'
         run: pnpm smoke:dev
+      - name: Probe zatto server in development build on Linux
+        if: runner.os == 'Linux'
+        run: xvfb-run --auto-servernum pnpm smoke:dev
       - name: Create application package
+        if: runner.os != 'Linux'
         run: pnpm make
+      - name: Create application package on Linux
+        if: runner.os == 'Linux'
+        run: xvfb-run --auto-servernum pnpm make
+      - name: Install Linux Debian package
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          shopt -s nullglob
+          packages=(apps/desktop/out/make/deb/x64/zatto_*.deb)
+          if (( ${#packages[@]} != 1 )); then
+            printf 'Expected one zatto package, found %d\n' "${#packages[@]}" >&2
+            exit 1
+          fi
+          sudo apt-get install --yes "./${packages[0]}"
       - name: Probe zatto server in packaged application
+        if: runner.os != 'Linux'
         run: pnpm smoke:packaged
+      - name: Probe zatto server in packaged application on Linux
+        if: runner.os == 'Linux'
+        env:
+          ZATTO_LINUX_EXECUTABLE_PATH: /usr/bin/zatto
+        run: xvfb-run --auto-servernum pnpm smoke:packaged
+      - name: Uninstall Linux Debian package
+        if: always() && runner.os == 'Linux'
+        run: sudo apt-get remove --yes zatto
       - name: Upload Windows installer
         if: runner.os == 'Windows'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: zatto-windows-installer
           path: apps/desktop/out/make/squirrel.windows/x64/zatto-Setup.exe
+          if-no-files-found: error
+      - name: Upload Linux Debian package
+        if: runner.os == 'Linux'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: zatto-linux-deb
+          path: apps/desktop/out/make/deb/x64/zatto_*.deb
           if-no-files-found: error

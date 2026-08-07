@@ -61,6 +61,7 @@ function resolvePackagedLayout(platform) {
     return {
       archiveParts: ["resources", "app.asar"],
       executableParts: ["zatto"],
+      iconParts: ["resources", "zatto-desktop.png"],
     };
   }
   throw new Error(`Unsupported desktop platform: ${platform}`);
