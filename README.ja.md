@@ -14,16 +14,20 @@
 
 ## 対応OS
 
-- macOS: GitHub Releasesから利用可能
-- Windows: CIからアプリとインストーラーを利用可能、GitHub Releaseでの配布は対応予定
-- Linux: CIからDebianパッケージを利用可能、GitHub Releaseでの配布は対応予定
+- macOS: 公開ダウンロードを準備中
+- Windows: 公開ダウンロードを準備中、CIのartifactは開発検証用
+- Linux: 公開ダウンロードを準備中、CIのartifactは開発検証用
+
+公開済みのGitHub Releaseはまだありません。
+最初の公開ビルド以降は、GitHub Releasesを正式な配布先にします。
 
 ## インストール
 
 ### macOS
 
+最初の公開ビルド以降は、
 [GitHub Releases](https://github.com/yuske-nakajima/zatto-desktop/releases)から
-最新のmacOS向けZIPをダウンロードします。
+macOS向けZIPをダウンロードします。
 ZIPを展開し、アプリを`Applications`へ移動してください。
 
 Finderからアプリを開きます。
@@ -35,6 +39,7 @@ Finderからアプリを開きます。
 成功した`main`の実行結果を開きます。
 `zatto-windows-installer` artifactをダウンロードし、展開してください。
 workflow artifactのダウンロードにはGitHubへのサインインが必要です。
+このartifactは開発検証用であり、正式なダウンロードではありません。
 展開した`zatto-Setup.exe`を実行します。
 インストーラーは、スタートメニューとWindowsのインストール済みアプリ設定へ
 `zatto`を追加します。
@@ -55,6 +60,7 @@ CIはWindows向けインストーラーとLinux向けDebianパッケージをビ
 成功した`main`の実行結果を開きます。
 `zatto-linux-deb` artifactをダウンロードし、展開してください。
 workflow artifactのダウンロードにはGitHubへのサインインが必要です。
+このartifactは開発検証用であり、正式なダウンロードではありません。
 
 パッケージの依存関係を自動で解決するには、APTで展開済みパッケージをインストールします。
 次のブロックはBashで実行してください。パッケージが厳密に1件ではない場合は停止します。
@@ -134,7 +140,7 @@ OSで視差効果を減らす設定を有効にしている場合は、表示時
 このリポジトリはpnpm workspaceで管理します。
 
 - `apps/desktop`: Electronデスクトップアプリ
-- `apps/site`: 製品サイトの実装時に追加するworkspace
+- `apps/site`: `/`を英語、`/ja/`を日本語にしたVite製品サイト
 
 共通のmise、pnpm、TypeScript、Biome、CI、Release設定はリポジトリルートで管理します。
 記載しているコマンドはリポジトリルートから実行してください。
@@ -184,6 +190,18 @@ pnpm smoke:packaged
 - `pnpm make`: macOS向けZIP、Windows向けインストーラー、
   Linux向けDebianパッケージのいずれかを作成し、zatto構成を検査
 - `pnpm smoke:packaged`: ASARと生成済みアプリのサーバーを検証
+
+製品サイトをローカルで起動するか、静的ビルドを検証します。
+
+```sh
+pnpm site:dev
+pnpm site:check
+pnpm site:build
+```
+
+- `pnpm site:dev`: Vite開発サーバーを起動
+- `pnpm site:check`: ページのテスト、ビルド、生成ファイルの検証
+- `pnpm site:build`: 英語と日本語の静的ページを`apps/site/dist`へ生成
 
 ### デスクトップアプリの構成
 

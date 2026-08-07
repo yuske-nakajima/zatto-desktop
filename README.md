@@ -14,17 +14,20 @@ Both are `zatto`; desktop describes how this version is distributed and used.
 
 ## Platform support
 
-- macOS: available from GitHub Releases
-- Windows: application and installer builds available from CI; GitHub Release distribution planned
-- Linux: Debian package builds available from CI; GitHub Release distribution planned
+- macOS: public download in preparation
+- Windows: public download in preparation; CI artifacts are for development verification
+- Linux: public download in preparation; CI artifacts are for development verification
+
+There is no public GitHub Release yet. GitHub Releases will be the official distribution channel
+after the first public build is published.
 
 ## Install
 
 ### macOS
 
-Download the latest macOS ZIP from
-[GitHub Releases](https://github.com/yuske-nakajima/zatto-desktop/releases),
-extract it, and move the application into `Applications`.
+After the first public build is published, download the macOS ZIP from
+[GitHub Releases](https://github.com/yuske-nakajima/zatto-desktop/releases).
+Extract it and move the application into `Applications`.
 
 Open the application from Finder.
 The `zatto` viewer appears after a short preparation screen.
@@ -35,6 +38,7 @@ Open a successful `main` run of the
 [CI workflow](https://github.com/yuske-nakajima/zatto-desktop/actions/workflows/ci.yml),
 download the `zatto-windows-installer` artifact, and extract it.
 GitHub requires sign-in to download workflow artifacts.
+This artifact is for development verification and is not a formal download.
 Run the extracted `zatto-Setup.exe`.
 The installer adds `zatto` to the Start menu and Windows installed-app settings.
 
@@ -52,6 +56,7 @@ Open a successful `main` run of the
 [CI workflow](https://github.com/yuske-nakajima/zatto-desktop/actions/workflows/ci.yml),
 download the `zatto-linux-deb` artifact, and extract it.
 GitHub requires sign-in to download workflow artifacts.
+This artifact is for development verification and is not a formal download.
 
 Install the extracted package with APT so package dependencies are resolved automatically.
 Run the following block with Bash. It stops unless the directory contains exactly one package.
@@ -129,7 +134,7 @@ The following sections are for contributors working on the desktop app.
 This repository is a pnpm workspace.
 
 - `apps/desktop`: Electron desktop application
-- `apps/site`: product site workspace added with the site implementation
+- `apps/site`: Vite product site with English at `/` and Japanese at `/ja/`
 
 Shared mise, pnpm, TypeScript, Biome, CI, and Release settings remain at the repository root.
 Run the documented commands from the repository root.
@@ -177,6 +182,18 @@ pnpm smoke:packaged
 - `pnpm smoke:dev`: verify startup, health, and authenticated shutdown in development
 - `pnpm make`: create a macOS ZIP, Windows installer, or Linux Debian package and inspect its content
 - `pnpm smoke:packaged`: inspect the ASAR archive and verify the server in the generated app
+
+Run the product site locally or verify its static build.
+
+```sh
+pnpm site:dev
+pnpm site:check
+pnpm site:build
+```
+
+- `pnpm site:dev`: start the Vite development server
+- `pnpm site:check`: test the pages, build them, and verify the generated files
+- `pnpm site:build`: generate the static English and Japanese pages in `apps/site/dist`
 
 ### Desktop architecture
 

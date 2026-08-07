@@ -1,0 +1,118 @@
+@media (max-width: 760px) {
+  .page-shell,
+  .nav-shell {
+    width: min(calc(100% - 2rem), var(--max-width));
+  }
+
+  .nav-shell {
+    min-height: 72px;
+  }
+
+  .nav-links > a:first-child {
+    display: none;
+  }
+
+  .hero {
+    min-height: auto;
+    grid-template-columns: 1fr;
+    padding-block: 4rem;
+  }
+
+  .hero-mark {
+    width: min(78vw, 340px);
+    justify-self: end;
+  }
+
+  .feature-section,
+  .install-section {
+    padding-block: 5rem;
+  }
+
+  .section-number {
+    position: static;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-heading {
+    margin-left: 0;
+  }
+
+  .feature-list,
+  .platform-list,
+  .identity-section {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-list,
+  .platform-list {
+    margin-top: 3rem;
+  }
+
+  .feature-list li,
+  .platform-list article {
+    padding-inline: 0;
+  }
+
+  .feature-list li + li,
+  .platform-list article + article {
+    border-left: 0;
+  }
+
+  .feature-index,
+  .platform-name {
+    margin-bottom: 1.5rem;
+  }
+
+  .identity-section {
+    gap: 1rem;
+    padding-block: 5rem;
+  }
+
+  .footer-shell {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 430px) {
+  h1 {
+    font-size: 3rem;
+  }
+
+  .brand span,
+  .nav-source {
+    display: none;
+  }
+
+  .nav-links {
+    margin-left: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto;
+    transition-duration: 0.01ms;
+  }
+}
+
+@media (forced-colors: active) {
+  .action-link,
+  .nav-source,
+  .hero-mark,
+  .artifact-note {
+    border: 2px solid ButtonText;
+  }
+
+  .action-link {
+    forced-color-adjust: none;
+    background: ButtonText;
+    color: ButtonFace;
+  }
+}
