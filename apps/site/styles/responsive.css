@@ -22,7 +22,7 @@
     gap: 3rem;
   }
 
-  .platform-list {
+  .entry-grid {
     grid-template-columns: 1fr;
   }
 }
@@ -81,11 +81,10 @@
     gap: 2.5rem;
   }
 
-  .platform-card {
+  .entry-card {
     padding: 2rem;
   }
 
-  .artifact-note,
   .footer-main {
     align-items: flex-start;
     flex-direction: column;
@@ -109,7 +108,7 @@
     font-size: 2rem;
   }
 
-  .nav-links > a:not(.nav-source) {
+  .nav-links > a:not(.nav-source):not(.nav-language) {
     display: none;
   }
 
@@ -118,7 +117,7 @@
     flex-direction: column;
   }
 
-  .platform-card header {
+  .entry-card-header {
     align-items: flex-start;
     flex-direction: column;
   }
@@ -144,8 +143,8 @@
 @media (forced-colors: active) {
   .primary-link,
   .nav-source,
-  .platform-card,
-  .artifact-note {
+  .entry-card,
+  .command-block {
     border: 2px solid ButtonText;
   }
 

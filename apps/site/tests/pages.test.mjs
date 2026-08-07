@@ -7,8 +7,13 @@ import { describe, expect, it } from "vitest";
 
 const SITE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const REPOSITORY_URL = "https://github.com/yuske-nakajima/zatto-desktop";
+const CLI_REPOSITORY_URL = "https://github.com/yuske-nakajima/zatto";
+const CLI_PACKAGE_URL = "https://www.npmjs.com/package/@yuske-nakajima/zatto";
 const REQUIRED_EXTERNAL_LINKS = [
   REPOSITORY_URL,
+  CLI_REPOSITORY_URL,
+  `${CLI_REPOSITORY_URL}/issues`,
+  CLI_PACKAGE_URL,
   `${REPOSITORY_URL}/issues`,
   `${REPOSITORY_URL}/releases`,
   `${REPOSITORY_URL}/actions/workflows/ci.yml`,
@@ -131,15 +136,29 @@ describe.each(PAGE_CASES)("$lang product page", (page) => {
     ).not.toBeNull();
   });
 
-  it("describes the product and honest platform availability", async () => {
+  it("presents CLI and desktop as two ways to use zatto", async () => {
     const document = await loadPage(page.file);
     const text = document.body.textContent?.replace(/\s+/g, " ") ?? "";
+    const terminalEntry = document.querySelector('[data-entry="terminal"]');
+    const desktopEntry = document.querySelector('[data-entry="desktop"]');
 
     for (const pattern of page.featurePatterns) {
       expect(text).toMatch(pattern);
     }
+    expect(terminalEntry?.textContent).toContain(
+      "npx @yuske-nakajima/zatto file.html",
+    );
+    expect(
+      terminalEntry?.querySelector(`a[href="${CLI_REPOSITORY_URL}"]`),
+    ).not.toBeNull();
+    expect(
+      terminalEntry?.querySelector(`a[href="${CLI_PACKAGE_URL}"]`),
+    ).not.toBeNull();
+    expect(desktopEntry?.querySelector("[data-platform]")).not.toBeNull();
     for (const platform of ["macOS", "Windows", "Linux"]) {
-      const section = document.querySelector(`[data-platform="${platform}"]`);
+      const section = desktopEntry?.querySelector(
+        `[data-platform="${platform}"]`,
+      );
       expect(section?.textContent).toContain(page.status);
     }
     expect(document.querySelector("[download]")).toBeNull();

@@ -90,9 +90,7 @@
 
 .feature-copy p,
 .identity-detail p,
-.availability-heading > p,
-.platform-card > p,
-.artifact-note p {
+.availability-heading > p {
   margin-bottom: 0;
   color: var(--color-text-secondary);
 }
@@ -117,65 +115,4 @@
   font-size: 1.125rem;
   line-height: 1.667;
   opacity: 0.92;
-}
-
-.platform-list {
-  display: grid;
-  margin-top: 4rem;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.5rem;
-}
-
-.platform-card {
-  display: flex;
-  min-width: 0;
-  flex-direction: column;
-  gap: 1.5rem;
-  padding: 2.5rem;
-  border: 1px solid
-    color-mix(in srgb, var(--color-text-secondary) 22%, transparent);
-  border-radius: 12px;
-  background: var(--color-bg-surface);
-}
-
-.platform-card header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.platform-card h3 {
-  font-size: 1.5rem;
-}
-
-.status-tag {
-  padding: 0.375rem 0.75rem;
-  border-radius: 4px;
-  background: var(--color-bg-selected);
-  color: var(--color-text-secondary);
-  font-size: 0.75rem;
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.artifact-note {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  padding: 2rem;
-  margin-top: 1.5rem;
-  border: 1px solid
-    color-mix(in srgb, var(--color-text-secondary) 32%, transparent);
-  border-radius: 8px;
-  background: var(--color-bg-surface);
-}
-
-.artifact-note p {
-  flex: 1;
-}
-
-.artifact-note .text-link {
-  flex: 0 0 auto;
-  color: var(--color-text-accent);
 }
