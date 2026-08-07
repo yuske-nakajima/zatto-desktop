@@ -40,4 +40,13 @@ describe("workspace layout", () => {
     expect(workspace).toContain("  - apps/*");
     expect(workspace).not.toContain("  - .\n");
   });
+
+  it("keeps repository text files stable across operating systems", async () => {
+    const attributes = await readFile(
+      path.join(repositoryRoot, ".gitattributes"),
+      "utf8",
+    );
+
+    expect(attributes).toContain("* text=auto eol=lf");
+  });
 });
