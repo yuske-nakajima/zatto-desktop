@@ -1,3 +1,4 @@
+import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
 
 import {
@@ -121,7 +122,7 @@ describe("WindowStateStore", () => {
     await store.flush();
 
     expect(write).toHaveBeenCalledWith(
-      "/user/data/window-state.json.tmp",
+      path.join("/user/data", "window-state.json.tmp"),
       JSON.stringify({
         bounds: { height: 720, width: 960, x: 30, y: 40 },
         isFullScreen: true,
@@ -133,7 +134,8 @@ describe("WindowStateStore", () => {
   it.each(["write", "rename"])(
     "does not replace the state file when atomic %s fails",
     async (failurePoint) => {
-      const files = new Map([["/user/data/window-state.json", "previous"]]);
+      const statePath = path.join("/user/data", "window-state.json");
+      const files = new Map([[statePath, "previous"]]);
       const store = new WindowStateStore("/user/data", {
         read: async (filePath) => files.get(filePath) ?? "",
         rename: async (source, destination) => {
@@ -147,7 +149,7 @@ describe("WindowStateStore", () => {
       });
 
       await expect(store.flush()).rejects.toThrow();
-      expect(files.get("/user/data/window-state.json")).toBe("previous");
+      expect(files.get(statePath)).toBe("previous");
     },
   );
 });

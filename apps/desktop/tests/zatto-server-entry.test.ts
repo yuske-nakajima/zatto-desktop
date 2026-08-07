@@ -45,7 +45,7 @@ describe("resolveZattoServerEntry", () => {
       writeFile(serverEntry, "export {};\n"),
     ]);
 
-    expect(resolveZattoServerEntry(temporaryDirectory)).toBe(
+    expect(await realpath(resolveZattoServerEntry(temporaryDirectory))).toBe(
       await realpath(serverEntry),
     );
   });
