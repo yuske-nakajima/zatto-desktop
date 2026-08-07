@@ -27,6 +27,8 @@ const PAGE_CASES = [
     canonical: "https://zatto.yuske.app/",
     languageHref: "/ja/",
     status: "In progress",
+    heroIntro:
+      "Use zatto from the terminal or as a desktop app. The same local viewer keeps a folder of pages together, whichever entrance fits your work.",
     featurePatterns: [/HTML files/i, /drag and drop/i, /CLI and desktop/i],
   },
   {
@@ -35,6 +37,8 @@ const PAGE_CASES = [
     canonical: "https://zatto.yuske.app/ja/",
     languageHref: "/",
     status: "準備中",
+    heroIntro:
+      "ターミナルからでも、デスクトップからでも。 zattoは、ローカルHTMLを1つの画面にまとめます。",
     featurePatterns: [
       /HTMLファイル/,
       /ドラッグ＆ドロップ/,
@@ -139,12 +143,17 @@ describe.each(PAGE_CASES)("$lang product page", (page) => {
   it("presents CLI and desktop as two ways to use zatto", async () => {
     const document = await loadPage(page.file);
     const text = document.body.textContent?.replace(/\s+/g, " ") ?? "";
+    const heroIntro = document
+      .querySelector(".hero-intro")
+      ?.textContent?.replace(/\s+/g, " ")
+      .trim();
     const terminalEntry = document.querySelector('[data-entry="terminal"]');
     const desktopEntry = document.querySelector('[data-entry="desktop"]');
 
     for (const pattern of page.featurePatterns) {
       expect(text).toMatch(pattern);
     }
+    expect(heroIntro).toBe(page.heroIntro);
     expect(terminalEntry?.textContent).toContain(
       "npx @yuske-nakajima/zatto file.html",
     );
