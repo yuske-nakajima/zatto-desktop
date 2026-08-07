@@ -16,7 +16,7 @@
 
 - macOS: GitHub Releasesから利用可能
 - Windows: CIからアプリとインストーラーを利用可能、GitHub Releaseでの配布は対応予定
-- Linux: 対応予定
+- Linux: CIからDebianパッケージを利用可能、GitHub Releaseでの配布は対応予定
 
 ## インストール
 
@@ -47,7 +47,54 @@ Microsoft Defender SmartScreenは、発行元が不明であるという警告�
 確認後に「詳細情報 > 実行」を選択します。
 
 複数OS向けRelease workflowを実装するまでは、GitHub ReleaseでmacOS版だけを配布します。
-CIはWindows runnerでWindows向けインストーラーをビルドし、検証します。
+CIはWindows向けインストーラーとLinux向けDebianパッケージをビルドし、検証します。
+
+### Linux
+
+[CI workflow](https://github.com/yuske-nakajima/zatto-desktop/actions/workflows/ci.yml)で
+成功した`main`の実行結果を開きます。
+`zatto-linux-deb` artifactをダウンロードし、展開してください。
+workflow artifactのダウンロードにはGitHubへのサインインが必要です。
+
+パッケージの依存関係を自動で解決するには、APTで展開済みパッケージをインストールします。
+次のブロックはBashで実行してください。パッケージが厳密に1件ではない場合は停止します。
+
+```bash
+(
+shopt -s nullglob
+packages=(zatto_*_amd64.deb)
+(( ${#packages[@]} == 1 )) || {
+  printf 'Expected one zatto package, found %d\n' "${#packages[@]}" >&2
+  exit 1
+}
+PACKAGE_PATH="./${packages[0]}"
+sudo apt install "$PACKAGE_PATH"
+)
+```
+
+`dpkg`でインストールし、APTで不足した依存関係を解決する方法もあります。
+次のBashブロックも、パッケージが厳密に1件であることを個別に確認します。
+
+```bash
+(
+shopt -s nullglob
+packages=(zatto_*_amd64.deb)
+(( ${#packages[@]} == 1 )) || {
+  printf 'Expected one zatto package, found %d\n' "${#packages[@]}" >&2
+  exit 1
+}
+PACKAGE_PATH="./${packages[0]}"
+sudo dpkg -i "$PACKAGE_PATH"
+sudo apt-get install --fix-broken
+)
+```
+
+アプリ一覧またはターミナルの`zatto`コマンドから起動できます。
+ユーザーデータを残してアプリを削除するには、次のコマンドを実行します。
+
+```sh
+sudo apt remove zatto
+```
 
 ## HTMLファイルの追加
 
@@ -94,7 +141,7 @@ OSで視差効果を減らす設定を有効にしている場合は、表示時
 
 ### 環境構築
 
-開発環境はmacOSとWindowsで検証し、[mise](https://mise.jdx.dev/)を使用します。
+開発環境はmacOS、Windows、Ubuntuで検証し、[mise](https://mise.jdx.dev/)を使用します。
 `.mise.toml`でNode.js 24.18.0とpnpm 11.17.0を固定しています。
 
 ```sh
@@ -134,8 +181,8 @@ pnpm smoke:packaged
 - `pnpm check`: 型検査、Lint、書式検査
 - `pnpm test`: Vitestによるテスト
 - `pnpm smoke:dev`: 開発版の起動、health、認証付きshutdownを検証
-- `pnpm make`: macOS向けZIPまたはWindows向けインストーラーを作成し、
-  パッケージ内のzatto構成を検査
+- `pnpm make`: macOS向けZIP、Windows向けインストーラー、
+  Linux向けDebianパッケージのいずれかを作成し、zatto構成を検査
 - `pnpm smoke:packaged`: ASARと生成済みアプリのサーバーを検証
 
 ### デスクトップアプリの構成
@@ -205,7 +252,7 @@ pnpm icons:generate
 
 ### バージョンとmacOS向けRelease
 
-デスクトップアプリのバージョンは`0.1.8`です。
+デスクトップアプリのバージョンは`0.1.9`です。
 `apps/desktop/package.json`を正として管理します。
 
 GitHub Actionsの`Release` workflowを`main`から手動実行します。

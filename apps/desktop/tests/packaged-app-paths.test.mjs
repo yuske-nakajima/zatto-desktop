@@ -38,7 +38,7 @@ describe("resolvePackagedAppPaths", () => {
       "x64",
       "zatto-linux-x64/resources/app.asar",
       "zatto-linux-x64/zatto",
-      undefined,
+      "zatto-linux-x64/resources/zatto-desktop.png",
     ],
   ])(
     "resolves %s artifacts",

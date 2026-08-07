@@ -1,3 +1,4 @@
+import path from "node:path";
 import { app, BrowserWindow, screen } from "electron";
 import isSquirrelStartup from "electron-squirrel-startup";
 import {
@@ -15,7 +16,11 @@ import { runZattoServerProbe } from "./zatto-server-probe";
 import { createElectronZattoServerManager } from "./zatto-server-process";
 
 const ZATTO_SERVER_PROBE_ARGUMENT = "--smoke-test-zatto-server";
+const WINDOW_LIFECYCLE_PROBE_ARGUMENT = "--smoke-test-window-lifecycle";
 const isZattoServerProbe = process.argv.includes(ZATTO_SERVER_PROBE_ARGUMENT);
+const isWindowLifecycleProbe = process.argv.includes(
+  WINDOW_LIFECYCLE_PROBE_ARGUMENT,
+);
 let applicationWindow: ApplicationWindow | undefined;
 let zattoServerManager: ZattoServerManager | undefined;
 
@@ -57,6 +62,14 @@ function registerWindowAllClosed(): void {
   });
 }
 
+function resolveApplicationIconPath(): string | undefined {
+  if (process.platform !== "linux") return undefined;
+  if (app.isPackaged) {
+    return path.join(process.resourcesPath, "zatto-desktop.png");
+  }
+  return path.resolve("assets/icons/zatto-desktop.png");
+}
+
 async function runProbe(): Promise<void> {
   const result = await runZattoServerProbe(
     app.getAppPath(),
@@ -74,6 +87,7 @@ async function startApplication(): Promise<void> {
   const window = new ApplicationWindow({
     getManagerState: () => zattoServerManager?.state ?? { status: "failed" },
     getWorkAreas,
+    iconPath: resolveApplicationIconPath(),
     preloadUrl: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     rendererUrl: MAIN_WINDOW_WEBPACK_ENTRY,
     userDataPath: app.getPath("userData"),
@@ -118,10 +132,30 @@ async function startApplication(): Promise<void> {
     });
   }
   if (result === "failed") console.error("zatto could not start.");
+  if (isWindowLifecycleProbe) {
+    if (result !== "running") {
+      throw new Error("zatto window lifecycle probe did not load its window");
+    }
+    const activeWindow = window.getWindow();
+    if (activeWindow === undefined || activeWindow.isDestroyed()) {
+      throw new Error("zatto window lifecycle probe lost its active window");
+    }
+    console.log("zatto window lifecycle probe loaded the owned server.");
+    activeWindow.close();
+  }
 }
 
-function reportFatalStartupFailure(): void {
+async function reportFatalStartupFailure(): Promise<void> {
   console.error("zatto could not start.");
+  if (isWindowLifecycleProbe) {
+    try {
+      await zattoServerManager?.stop();
+    } catch {
+      console.error("zatto window lifecycle probe could not stop its server.");
+    }
+    app.exit(1);
+    return;
+  }
   if (isZattoServerProbe) {
     app.exit(1);
     return;

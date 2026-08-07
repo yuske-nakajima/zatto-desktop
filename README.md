@@ -16,7 +16,7 @@ Both are `zatto`; desktop describes how this version is distributed and used.
 
 - macOS: available from GitHub Releases
 - Windows: application and installer builds available from CI; GitHub Release distribution planned
-- Linux: planned
+- Linux: Debian package builds available from CI; GitHub Release distribution planned
 
 ## Install
 
@@ -44,7 +44,54 @@ unknown. Check that the installer came from the official
 repository before choosing **More info > Run anyway**.
 
 The GitHub Release workflow distributes only the macOS build until the multi-platform release
-workflow is implemented. CI builds and verifies the Windows installer on a Windows runner.
+workflow is implemented. CI builds and verifies the Windows installer and Linux Debian package.
+
+### Linux
+
+Open a successful `main` run of the
+[CI workflow](https://github.com/yuske-nakajima/zatto-desktop/actions/workflows/ci.yml),
+download the `zatto-linux-deb` artifact, and extract it.
+GitHub requires sign-in to download workflow artifacts.
+
+Install the extracted package with APT so package dependencies are resolved automatically.
+Run the following block with Bash. It stops unless the directory contains exactly one package.
+
+```bash
+(
+shopt -s nullglob
+packages=(zatto_*_amd64.deb)
+(( ${#packages[@]} == 1 )) || {
+  printf 'Expected one zatto package, found %d\n' "${#packages[@]}" >&2
+  exit 1
+}
+PACKAGE_PATH="./${packages[0]}"
+sudo apt install "$PACKAGE_PATH"
+)
+```
+
+You can also install it with `dpkg`, then ask APT to resolve any missing dependencies.
+This Bash block performs the same exact-one-package check independently.
+
+```bash
+(
+shopt -s nullglob
+packages=(zatto_*_amd64.deb)
+(( ${#packages[@]} == 1 )) || {
+  printf 'Expected one zatto package, found %d\n' "${#packages[@]}" >&2
+  exit 1
+}
+PACKAGE_PATH="./${packages[0]}"
+sudo dpkg -i "$PACKAGE_PATH"
+sudo apt-get install --fix-broken
+)
+```
+
+Launch `zatto` from the application menu or run `zatto` in a terminal.
+Remove the application and keep user data with this command.
+
+```sh
+sudo apt remove zatto
+```
 
 ## Add HTML files
 
@@ -89,7 +136,7 @@ Run the documented commands from the repository root.
 
 ### Setup
 
-Development is verified on macOS and Windows and requires [mise](https://mise.jdx.dev/).
+Development is verified on macOS, Windows, and Ubuntu and requires [mise](https://mise.jdx.dev/).
 `.mise.toml` pins Node.js 24.18.0 and pnpm 11.17.0.
 
 ```sh
@@ -128,7 +175,7 @@ pnpm smoke:packaged
 - `pnpm check`: run type checking, linting, and formatting checks
 - `pnpm test`: run the Vitest tests
 - `pnpm smoke:dev`: verify startup, health, and authenticated shutdown in development
-- `pnpm make`: create a macOS ZIP or Windows installer and inspect the packaged zatto content
+- `pnpm make`: create a macOS ZIP, Windows installer, or Linux Debian package and inspect its content
 - `pnpm smoke:packaged`: inspect the ASAR archive and verify the server in the generated app
 
 ### Desktop architecture
@@ -196,7 +243,7 @@ pnpm icons:generate
 
 ### Version and macOS release
 
-The desktop app version is `0.1.8`.
+The desktop app version is `0.1.9`.
 `apps/desktop/package.json` is the source of truth.
 
 Run the GitHub Actions `Release` workflow manually from `main`.
