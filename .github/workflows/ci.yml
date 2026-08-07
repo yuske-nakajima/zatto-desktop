@@ -11,7 +11,11 @@ permissions:
 
 jobs:
   verify:
-    runs-on: macos-14
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-14, windows-2025]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Check out repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
@@ -29,3 +33,10 @@ jobs:
         run: pnpm make
       - name: Probe zatto server in packaged application
         run: pnpm smoke:packaged
+      - name: Upload Windows installer
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: zatto-windows-installer
+          path: apps/desktop/out/make/squirrel.windows/x64/zatto-Setup.exe
+          if-no-files-found: error

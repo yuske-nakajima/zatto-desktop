@@ -1,10 +1,12 @@
 import { app, BrowserWindow, screen } from "electron";
+import isSquirrelStartup from "electron-squirrel-startup";
 import {
   createStateFlushingStop,
   createZattoServerQuitHandler,
   shouldQuitAfterAllWindowsClosed,
   shouldRecreateWindowOnActivate,
 } from "./app-lifecycle";
+import { bootstrapDesktopApplication } from "./application-bootstrap";
 import { ApplicationWindow } from "./application-window";
 import { configureElectronHtmlFiles } from "./electron-html-files";
 import { runWindowStartup } from "./window-flow";
@@ -33,7 +35,7 @@ function settleWindowTask(operation: Promise<unknown>): void {
   });
 }
 
-if (!isZattoServerProbe) {
+function registerBeforeQuit(): void {
   app.on(
     "before-quit",
     createZattoServerQuitHandler({
@@ -47,6 +49,12 @@ if (!isZattoServerProbe) {
       }),
     }),
   );
+}
+
+function registerWindowAllClosed(): void {
+  app.on("window-all-closed", () => {
+    if (shouldQuitAfterAllWindowsClosed(process.platform)) app.quit();
+  });
 }
 
 async function runProbe(): Promise<void> {
@@ -123,8 +131,14 @@ function reportFatalStartupFailure(): void {
   }
 }
 
-void app.whenReady().then(startApplication).catch(reportFatalStartupFailure);
+function startWhenReady(): void {
+  void app.whenReady().then(startApplication).catch(reportFatalStartupFailure);
+}
 
-app.on("window-all-closed", () => {
-  if (shouldQuitAfterAllWindowsClosed(process.platform)) app.quit();
+bootstrapDesktopApplication({
+  isServerProbe: isZattoServerProbe,
+  isSquirrelStartup,
+  registerBeforeQuit,
+  registerWindowAllClosed,
+  startWhenReady,
 });

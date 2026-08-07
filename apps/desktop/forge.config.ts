@@ -1,6 +1,7 @@
 import { cp, mkdir, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import path from "node:path";
+import { MakerSquirrel } from "@electron-forge/maker-squirrel";
 import { MakerZIP } from "@electron-forge/maker-zip";
 import { WebpackPlugin } from "@electron-forge/plugin-webpack";
 import type { ForgeConfig } from "@electron-forge/shared-types";
@@ -9,6 +10,7 @@ import { build } from "esbuild";
 import { resolvePlatformIconPath } from "./src/main/platform-assets";
 import { mainConfig } from "./webpack.main.config";
 import { rendererConfig } from "./webpack.renderer.config";
+import { resolveWindowsMakerConfig } from "./windows-maker-config";
 
 const zattoPackageDirectory = path.join(
   "node_modules",
@@ -151,7 +153,18 @@ const config: ForgeConfig = {
       await bundleZattoServer(buildPath);
     },
   },
-  makers: [new MakerZIP({}, ["darwin"])],
+  makers: [
+    new MakerSquirrel(
+      resolveWindowsMakerConfig(
+        resolvePlatformIconPath(
+          path.resolve("assets/icons/zatto-desktop"),
+          "win32",
+        ),
+      ),
+      ["win32"],
+    ),
+    new MakerZIP({}, ["darwin"]),
+  ],
   plugins: [
     new WebpackPlugin({
       mainConfig,
