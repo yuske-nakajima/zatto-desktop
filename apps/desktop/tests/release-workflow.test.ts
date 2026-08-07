@@ -2,9 +2,11 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { resolveMacosDistributionConfig } from "../forge.config";
+import { findRepositoryRoot } from "./repository-root";
 
+const repositoryRoot = findRepositoryRoot();
 const repositoryFile = (relativePath: string) =>
-  readFile(path.join(process.cwd(), relativePath), "utf8");
+  readFile(path.join(repositoryRoot, relativePath), "utf8");
 
 describe("macOS release workflow", () => {
   it("runs the complete release verification from main", async () => {
@@ -29,7 +31,7 @@ describe("macOS release workflow", () => {
   it("keeps signing credentials in GitHub Secrets", async () => {
     const [workflow, forgeConfig, readme] = await Promise.all([
       repositoryFile(".github/workflows/release.yml"),
-      repositoryFile("forge.config.ts"),
+      repositoryFile("apps/desktop/forge.config.ts"),
       repositoryFile("README.md"),
     ]);
     const secretNames = [

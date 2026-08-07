@@ -1,7 +1,7 @@
 # zatto
 
 <p align="center">
-  <img src="assets/icons/zatto-desktop.png" alt="zatto application icon" width="160" height="160" />
+  <img src="apps/desktop/assets/icons/zatto-desktop.png" alt="zatto application icon" width="160" height="160" />
 </p>
 
 [日本語](./README.ja.md)
@@ -51,6 +51,16 @@ entire window. Its motion is reduced when reduced motion is enabled in macOS.
 ## Development
 
 The following sections are for contributors working on the desktop app.
+
+### Repository layout
+
+This repository is a pnpm workspace.
+
+- `apps/desktop`: Electron desktop application
+- `apps/site`: product site workspace added with the site implementation
+
+Shared mise, pnpm, TypeScript, Biome, CI, and Release settings remain at the repository root.
+Run the documented commands from the repository root.
 
 ### Setup
 
@@ -148,10 +158,10 @@ submission, same-origin privileges, parent-page access, and zatto API access are
 The app icon uses overlapping HTML cards that form the shape of a Z.
 The repository contains a transparent 1024-pixel master and platform formats:
 
-- `assets/brand/zatto-desktop-master.png`: source image
-- `assets/icons/zatto-desktop.icns`: macOS
-- `assets/icons/zatto-desktop.ico`: Windows
-- `assets/icons/zatto-desktop.png`: Linux
+- `apps/desktop/assets/brand/zatto-desktop-master.png`: source image
+- `apps/desktop/assets/icons/zatto-desktop.icns`: macOS
+- `apps/desktop/assets/icons/zatto-desktop.ico`: Windows
+- `apps/desktop/assets/icons/zatto-desktop.png`: Linux
 
 Regenerate the platform assets when ImageMagick is available.
 
@@ -161,8 +171,8 @@ pnpm icons:generate
 
 ### Version and macOS release
 
-The desktop app version is `0.1.5`.
-`package.json` is the source of truth.
+The desktop app version is `0.1.6`.
+`apps/desktop/package.json` is the source of truth.
 
 Run the GitHub Actions `Release` workflow manually from `main`.
 The workflow reads the package version, runs the quality and smoke checks, signs and notarizes

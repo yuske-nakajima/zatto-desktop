@@ -1,0 +1,40 @@
+{
+  "name": "zatto-desktop",
+  "productName": "zatto",
+  "version": "0.1.6",
+  "description": "macOS desktop shell for zatto",
+  "main": ".webpack/main",
+  "private": true,
+  "scripts": {
+    "icons:generate": "node scripts/generate-app-icons.mjs",
+    "start": "node scripts/run-forge.mjs start",
+    "smoke:dev": "node scripts/run-forge.mjs start -- --smoke-test-zatto-server",
+    "smoke:packaged": "node scripts/verify-packaged-contents.mjs && node scripts/run-packaged-smoke.mjs",
+    "package": "node scripts/run-forge.mjs package",
+    "make": "node scripts/run-forge.mjs make && node scripts/verify-packaged-contents.mjs",
+    "check": "pnpm run typecheck && biome check .",
+    "typecheck": "tsc --noEmit",
+    "format": "biome check --write .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@yuske-nakajima/zatto": "0.1.3"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "7.11.2",
+    "@electron-forge/maker-zip": "7.11.2",
+    "@electron-forge/plugin-webpack": "7.11.2",
+    "@electron-forge/shared-types": "7.11.2",
+    "@electron/asar": "3.4.1",
+    "@types/node": "24.10.13",
+    "css-loader": "7.1.2",
+    "electron": "43.3.0",
+    "esbuild": "0.28.1",
+    "esbuild-loader": "4.5.0",
+    "style-loader": "4.0.0",
+    "typescript": "7.0.2",
+    "vitest": "4.1.10",
+    "webpack": "5.104.1",
+    "webpack-cli": "6.0.1"
+  }
+}
