@@ -22,8 +22,10 @@ describe("application branding", () => {
   it("configures Electron Packager to select the platform extension", async () => {
     const forgeConfig = await readFile(path.resolve("forge.config.ts"), "utf8");
 
+    expect(forgeConfig).toContain("icon: resolvePlatformIconPath(");
     expect(forgeConfig).toContain(
-      'icon: path.resolve("assets/icons/zatto-desktop"),',
+      'path.resolve("assets/icons/zatto-desktop"),',
     );
+    expect(forgeConfig).toContain("process.platform,");
   });
 });

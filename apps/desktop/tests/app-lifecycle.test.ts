@@ -2,6 +2,8 @@ import { describe, expect, it, vi } from "vitest";
 import {
   createStateFlushingStop,
   createZattoServerQuitHandler,
+  shouldQuitAfterAllWindowsClosed,
+  shouldRecreateWindowOnActivate,
 } from "../src/main/app-lifecycle";
 import { ZattoServerError } from "../src/main/zatto-server-errors";
 import { Deferred } from "./zatto-server-manager-fixture";
@@ -98,4 +100,19 @@ describe("createStateFlushingStop", () => {
     expect(reportStateError).toHaveBeenCalledWith(failure);
     expect(stopServer).toHaveBeenCalledOnce();
   });
+});
+
+describe("desktop platform lifecycle", () => {
+  it("keeps the macOS process available for window recreation", () => {
+    expect(shouldQuitAfterAllWindowsClosed("darwin")).toBe(false);
+    expect(shouldRecreateWindowOnActivate("darwin")).toBe(true);
+  });
+
+  it.each(["win32", "linux"] as const)(
+    "quits after the last window closes on %s",
+    (platform) => {
+      expect(shouldQuitAfterAllWindowsClosed(platform)).toBe(true);
+      expect(shouldRecreateWindowOnActivate(platform)).toBe(false);
+    },
+  );
 });

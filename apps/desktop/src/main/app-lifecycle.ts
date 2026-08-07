@@ -20,6 +20,30 @@ export interface StateFlushingStopDependencies {
 }
 
 /**
+ * Determines whether closing the final window should end the process.
+ *
+ * @param platform - Node.js platform identifier
+ * @returns True for platforms without the macOS application lifecycle
+ */
+export function shouldQuitAfterAllWindowsClosed(
+  platform: NodeJS.Platform,
+): boolean {
+  return platform !== "darwin";
+}
+
+/**
+ * Determines whether application activation can recreate a closed window.
+ *
+ * @param platform - Node.js platform identifier
+ * @returns True when the platform retains an application without windows
+ */
+export function shouldRecreateWindowOnActivate(
+  platform: NodeJS.Platform,
+): boolean {
+  return platform === "darwin";
+}
+
+/**
  * Creates a stop operation that cannot be blocked by state persistence failure.
  *
  * @param dependencies - State flush, error reporting, and server stop operations

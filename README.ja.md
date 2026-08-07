@@ -12,6 +12,12 @@
 [`yuske-nakajima/zatto`](https://github.com/yuske-nakajima/zatto)で公開しています。
 どちらも名称は`zatto`です。desktopは、この版の配布形態と利用方法を表します。
 
+## 対応OS
+
+- macOS: GitHub Releasesから利用可能
+- Windows: 対応予定
+- Linux: 対応予定
+
 ## インストール
 
 [GitHub Releases](https://github.com/yuske-nakajima/zatto-desktop/releases)から
@@ -26,8 +32,9 @@ Finderからアプリを開きます。
 `.html`または`.htm`ファイルは、次の方法で追加できます。
 
 - 「ファイル > HTMLファイルを開く」を選択
-- <kbd>Command</kbd>+<kbd>O</kbd>を押す
-- Finderからファイルをドラッグし、ウィンドウ内の任意の場所へドロップ
+- macOSでは<kbd>Command</kbd>+<kbd>O</kbd>、
+  WindowsとLinuxでは<kbd>Ctrl</kbd>+<kbd>O</kbd>を押す
+- ファイルマネージャーからファイルをドラッグし、ウィンドウ内の任意の場所へドロップ
 
 追加した先頭のファイルをすぐに表示します。
 表示するファイルは、`zatto`のファイルパネルから切り替えられます。
@@ -47,7 +54,7 @@ Finderからアプリを開きます。
 
 HTMLプレビューより手前に全画面のドロップ表示を出すため、
 ウィンドウ全体へファイルをドロップできます。
-macOSで視差効果を減らす設定を有効にしている場合は、表示時の動きを抑えます。
+OSで視差効果を減らす設定を有効にしている場合は、表示時の動きを抑えます。
 
 ## 開発
 
@@ -145,7 +152,7 @@ package exportsと`dist/web`の静的UI全体も維持します。
 メインウィンドウはコンテキスト分離、サンドボックス、Webセキュリティを有効にします。
 preloadからWebコンテンツへAPIを公開しません。
 
-Finderからのドロップでは、preloadがOS由来の`File`を絶対パスへ変換し、
+ファイルマネージャーからのドロップでは、preloadがOS由来の`File`を絶対パスへ変換し、
 限定IPCへ送ります。main processは送信元、main frame、所有origin、payloadを検証します。
 絶対パスとパス取得APIはWebコンテンツへ公開しません。
 
@@ -175,7 +182,7 @@ pnpm icons:generate
 
 ### バージョンとmacOS向けRelease
 
-デスクトップアプリのバージョンは`0.1.6`です。
+デスクトップアプリのバージョンは`0.1.7`です。
 `apps/desktop/package.json`を正として管理します。
 
 GitHub Actionsの`Release` workflowを`main`から手動実行します。

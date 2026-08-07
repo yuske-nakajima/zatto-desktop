@@ -12,6 +12,12 @@ The command-line version is available in the
 [`yuske-nakajima/zatto`](https://github.com/yuske-nakajima/zatto) repository.
 Both are `zatto`; desktop describes how this version is distributed and used.
 
+## Platform support
+
+- macOS: available from GitHub Releases
+- Windows: planned
+- Linux: planned
+
 ## Install
 
 Download the latest macOS ZIP from
@@ -26,8 +32,8 @@ The `zatto` viewer appears after a short preparation screen.
 Add one or more `.html` or `.htm` files in any of these ways:
 
 - choose **File > Open HTML Files**
-- press <kbd>Command</kbd>+<kbd>O</kbd>
-- drag files from Finder and drop them anywhere in the window
+- press <kbd>Command</kbd>+<kbd>O</kbd> on macOS or <kbd>Ctrl</kbd>+<kbd>O</kbd> on Windows and Linux
+- drag files from your file manager and drop them anywhere in the window
 
 The first added file opens immediately.
 Use the file panel in `zatto` to switch between files.
@@ -46,7 +52,7 @@ when the app starts again.
 Saved window positions outside the available displays are corrected automatically.
 
 The full-window drop indicator stays above HTML previews so files can be dropped across the
-entire window. Its motion is reduced when reduced motion is enabled in macOS.
+entire window. Its motion is reduced when reduced motion is enabled in the operating system.
 
 ## Development
 
@@ -140,7 +146,7 @@ Node.js APIs are unavailable to the renderer.
 The main window enables context isolation, sandboxing, and web security.
 The preload does not expose an API to web content.
 
-For Finder drops, the preload converts operating-system `File` objects to absolute paths and
+For file-manager drops, the preload converts operating-system `File` objects to absolute paths and
 sends them through restricted IPC. The main process validates the sender, main frame, owned
 origin, and payload. Absolute paths and path lookup APIs are not exposed to web content.
 
@@ -171,7 +177,7 @@ pnpm icons:generate
 
 ### Version and macOS release
 
-The desktop app version is `0.1.6`.
+The desktop app version is `0.1.7`.
 `apps/desktop/package.json` is the source of truth.
 
 Run the GitHub Actions `Release` workflow manually from `main`.

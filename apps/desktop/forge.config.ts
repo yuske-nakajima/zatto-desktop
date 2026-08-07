@@ -6,6 +6,7 @@ import { WebpackPlugin } from "@electron-forge/plugin-webpack";
 import type { ForgeConfig } from "@electron-forge/shared-types";
 import zattoPackage from "@yuske-nakajima/zatto/package.json";
 import { build } from "esbuild";
+import { resolvePlatformIconPath } from "./src/main/platform-assets";
 import { mainConfig } from "./webpack.main.config";
 import { rendererConfig } from "./webpack.renderer.config";
 
@@ -138,7 +139,10 @@ const config: ForgeConfig = {
   packagerConfig: {
     appBundleId: "com.yuskenakajima.zatto-desktop",
     asar: true,
-    icon: path.resolve("assets/icons/zatto-desktop"),
+    icon: resolvePlatformIconPath(
+      path.resolve("assets/icons/zatto-desktop"),
+      process.platform,
+    ),
     ...resolveMacosDistributionConfig(process.env),
   },
   rebuildConfig: {},

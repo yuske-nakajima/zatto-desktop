@@ -1,5 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
 
+vi.mock("electron", () => ({
+  dialog: {},
+  ipcMain: {},
+  Menu: {},
+}));
+
 import {
   createSingleFlightAction,
   serializeHtmlFileAdds,
