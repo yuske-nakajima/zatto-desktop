@@ -21,7 +21,7 @@ const PAGE_CASES = [
     lang: "en",
     canonical: "https://zatto.yuske.app/",
     languageHref: "/ja/",
-    status: "Download preparation in progress",
+    status: "In progress",
     featurePatterns: [/HTML files/i, /drag and drop/i, /CLI and desktop/i],
   },
   {
@@ -29,7 +29,7 @@ const PAGE_CASES = [
     lang: "ja",
     canonical: "https://zatto.yuske.app/ja/",
     languageHref: "/",
-    status: "ダウンロード準備中",
+    status: "準備中",
     featurePatterns: [
       /HTMLファイル/,
       /ドラッグ＆ドロップ/,
@@ -92,6 +92,9 @@ describe.each(PAGE_CASES)("$lang product page", (page) => {
     expect(
       document.querySelector('link[rel="apple-touch-icon"]'),
     ).not.toBeNull();
+    expect(
+      document.querySelectorAll('img[src="/zatto-wordmark.png"]'),
+    ).toHaveLength(2);
   });
 
   it("uses semantic landmarks and accessible controls", async () => {
@@ -163,6 +166,7 @@ describe("static site assets", () => {
       robots,
       sitemap,
       icon,
+      wordmark,
       baseStyles,
       layoutStyles,
       componentStyles,
@@ -171,6 +175,7 @@ describe("static site assets", () => {
       readFile(resolve(SITE_ROOT, "public/robots.txt"), "utf8"),
       readFile(resolve(SITE_ROOT, "public/sitemap.xml"), "utf8"),
       readFile(resolve(SITE_ROOT, "public/zatto-icon.png")),
+      readFile(resolve(SITE_ROOT, "public/zatto-wordmark.png")),
       readFile(resolve(SITE_ROOT, "styles/base.css"), "utf8"),
       readFile(resolve(SITE_ROOT, "styles/layout.css"), "utf8"),
       readFile(resolve(SITE_ROOT, "styles/components.css"), "utf8"),
@@ -180,6 +185,20 @@ describe("static site assets", () => {
     expect(robots).toContain("Sitemap: https://zatto.yuske.app/sitemap.xml");
     expect(sitemap).toContain("https://zatto.yuske.app/ja/");
     expect(icon.subarray(1, 4).toString()).toBe("PNG");
+    expect(wordmark.subarray(1, 4).toString()).toBe("PNG");
+    for (const variable of [
+      "--color-text-tertiary: #94a3b8",
+      "--color-text-accent: #4f46e5",
+      "--color-bg-surface: #ffffff",
+      "--color-text-inverse: #ffffff",
+      "--color-bg-accent: #4f46e5",
+      "--color-text-primary: #0f172a",
+      "--color-text-secondary: #64748b",
+      "--color-bg-selected: #eef2ff",
+      "--color-bg-app: #f8fafc",
+    ]) {
+      expect(baseStyles).toContain(variable);
+    }
     expect(baseStyles).toContain(":focus-visible");
     expect(layoutStyles).toContain("min-height: 44px");
     expect(responsiveStyles).toContain("prefers-reduced-motion");

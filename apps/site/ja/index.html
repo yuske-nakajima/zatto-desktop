@@ -20,7 +20,7 @@
     <meta name="twitter:title" content="zatto — HTMLファイルを、ひとつの場所に" />
     <meta name="twitter:description" content="ローカルHTMLファイルのためのビューアー。" />
     <meta name="twitter:image" content="https://zatto.yuske.app/zatto-icon.png" />
-    <meta name="theme-color" content="#fffaf2" />
+    <meta name="theme-color" content="#4f46e5" />
     <link rel="icon" href="/zatto-icon.png" type="image/png" />
     <link rel="apple-touch-icon" href="/zatto-icon.png" />
     <link rel="stylesheet" href="/styles/base.css" />
@@ -30,151 +30,162 @@
   </head>
   <body>
     <a class="skip-link" href="#main-content">本文へ移動</a>
-    <header class="site-header">
-      <nav class="nav-shell" aria-label="メインナビゲーション">
+    <header class="site-header hero-panel accent-panel">
+      <nav class="nav-shell page-shell" aria-label="メインナビゲーション">
         <a class="brand" href="/ja/" aria-label="zatto ホーム">
-          <img src="/zatto-icon.png" alt="" width="44" height="44" />
-          <span>zatto</span>
+          <img src="/zatto-wordmark.png" alt="" width="104" height="26" />
         </a>
         <div class="nav-links">
-          <a href="#install">インストール</a>
+          <a href="#workflow">使い方</a>
+          <a href="#download">ダウンロード</a>
           <a href="/" hreflang="en" lang="en">English</a>
           <a
             class="nav-source"
             href="https://github.com/yuske-nakajima/zatto-desktop"
             target="_blank"
             rel="noopener noreferrer"
-          >GitHub</a>
+          >GitHub ↗</a>
         </div>
       </nav>
     </header>
 
     <main id="main-content" tabindex="-1">
-      <section class="hero page-shell" aria-labelledby="hero-title">
-        <div class="hero-copy">
-          <p class="eyebrow">デスクのHTMLに、ひとつの居場所を</p>
-          <h1 id="hero-title">HTMLファイルを、ひとつの場所に。</h1>
-          <p class="hero-intro">
-            zattoは、ローカルHTMLを1つの画面で開くビューアーです。
-            いくつものページを、ブラウザータブへ散らさず見比べられます。
-          </p>
-          <div class="hero-actions">
-            <a
-              class="action-link"
-              href="https://github.com/yuske-nakajima/zatto-desktop"
-              target="_blank"
-              rel="noopener noreferrer"
-            >ソースを見る</a>
-            <a class="text-link" href="#install">各OSの状況を見る <span aria-hidden="true">↓</span></a>
+      <section class="hero-panel accent-panel" aria-labelledby="hero-title">
+        <div class="hero page-shell">
+          <div class="hero-copy">
+            <div class="overline-row">
+              <span class="overline-dot" aria-hidden="true"></span>
+              <p class="eyebrow">デスクのHTMLに、ひとつの居場所を</p>
+            </div>
+            <div class="hero-heading">
+              <h1 id="hero-title">HTMLファイルを、ひとつの場所に。</h1>
+              <p class="hero-intro">
+                zattoは、ローカルHTMLを1つの画面で開くビューアーです。
+                いくつものページを、ブラウザータブへ散らさず見比べられます。
+              </p>
+            </div>
+            <div class="hero-actions">
+              <a
+                class="primary-link"
+                href="https://github.com/yuske-nakajima/zatto-desktop"
+                target="_blank"
+                rel="noopener noreferrer"
+              >ソースを見る</a>
+              <a class="text-link" href="#workflow">使い方を見る →</a>
+            </div>
           </div>
         </div>
-        <div class="hero-mark" aria-hidden="true">
-          <span class="mark-label">HTML × 必要なだけ</span>
-          <img src="/zatto-icon.png" alt="" width="320" height="320" />
+      </section>
+      <section id="workflow" class="workflow-section" aria-labelledby="workflow-title">
+        <div class="page-shell">
+          <div class="section-heading">
+            <p class="eyebrow">使い方</p>
+            <h2 id="workflow-title">フォルダーから、集中できる画面へ</h2>
+          </div>
+          <ol class="feature-list">
+            <li>
+              <span class="feature-index">01</span>
+              <div class="feature-copy">
+                <h3>HTMLファイルを選ぶ</h3>
+                <p>1つまたは複数の<code>.html</code>と<code>.htm</code>を選択します。</p>
+              </div>
+            </li>
+            <li>
+              <span class="feature-index">02</span>
+              <div class="feature-copy">
+                <h3>どこにでもドロップ</h3>
+                <p>表示中のページを含むウィンドウ全体へ、ドラッグ＆ドロップできます。</p>
+              </div>
+            </li>
+            <li>
+              <span class="feature-index">03</span>
+              <div class="feature-copy">
+                <h3>ページを行き来する</h3>
+                <p>1つのパネルから切り替えても、相対パスの画像やスタイルは保たれます。</p>
+              </div>
+            </li>
+          </ol>
         </div>
       </section>
 
-      <section class="feature-section page-shell" aria-labelledby="workflow-title">
-        <p class="section-number" aria-hidden="true">01</p>
-        <div class="section-heading">
-          <p class="eyebrow">ファイルは元の場所に</p>
-          <h2 id="workflow-title">フォルダーから、集中できる画面へ</h2>
-        </div>
-        <ol class="feature-list">
-          <li>
-            <span class="feature-index">01</span>
-            <h3>HTMLファイルを選ぶ</h3>
-            <p>メニューから、1つまたは複数の<code>.html</code>と<code>.htm</code>を選択します。</p>
-          </li>
-          <li>
-            <span class="feature-index">02</span>
-            <h3>どこにでもドロップ</h3>
-            <p>表示中のページを含むウィンドウ全体で、ドラッグ＆ドロップできます。</p>
-          </li>
-          <li>
-            <span class="feature-index">03</span>
-            <h3>ページを行き来する</h3>
-            <p>1つのパネルから表示を切り替えても、相対パスの画像やスタイルは保たれます。</p>
-          </li>
-        </ol>
-      </section>
-
-      <section class="identity-section page-shell" aria-labelledby="identity-title">
-        <div class="identity-statement">
-          <p class="eyebrow">入口は2つ、道具は1つ</p>
-          <h2 id="identity-title">CLIとデスクトップは、同じzattoです。</h2>
-        </div>
-        <div class="identity-detail">
-          <p>
-            ターミナルから作業を始めるならCLIを使えます。
-            ファイル選択やドロップから始めるなら、デスクトップアプリが自然です。
-          </p>
-          <a
-            class="text-link"
-            href="https://github.com/yuske-nakajima/zatto"
-            target="_blank"
-            rel="noopener noreferrer"
-          >CLIリポジトリを見る <span aria-hidden="true">↗</span></a>
+      <section class="identity-section accent-panel" aria-labelledby="identity-title">
+        <div class="identity-shell page-shell">
+          <div class="identity-statement">
+            <p class="eyebrow">入口は2つ、道具は1つ</p>
+            <h2 id="identity-title">CLIとデスクトップは、同じzattoです。</h2>
+          </div>
+          <div class="identity-detail">
+            <p>
+              ターミナルから作業を始めるならCLIを使えます。
+              ファイル選択やドロップから始めるなら、デスクトップアプリが自然です。
+            </p>
+            <a
+              class="text-link"
+              href="https://github.com/yuske-nakajima/zatto"
+              target="_blank"
+              rel="noopener noreferrer"
+            >CLIリポジトリを見る ↗</a>
+          </div>
         </div>
       </section>
 
-      <section id="install" class="install-section page-shell" aria-labelledby="install-title">
-        <p class="section-number" aria-hidden="true">02</p>
-        <div class="section-heading install-heading">
-          <p class="eyebrow">macOS · Windows · Linux</p>
-          <h2 id="install-title">デスクトップ版のダウンロードを準備しています。</h2>
-          <p>
-            公開済みのGitHub Releaseはまだありません。
-            最初の公開ビルド以降は、GitHub Releasesを正式な配布先にします。
-          </p>
-          <a
-            class="text-link"
-            href="https://github.com/yuske-nakajima/zatto-desktop/releases"
-            target="_blank"
-            rel="noopener noreferrer"
-          >公開後の配布先を見る <span aria-hidden="true">↗</span></a>
+      <section id="download" class="availability-section" aria-labelledby="download-title">
+        <div class="page-shell">
+          <div class="availability-heading">
+            <p class="eyebrow">提供状況</p>
+            <h2 id="download-title">デスクトップ版のダウンロードを準備しています。</h2>
+            <p>公開済みのGitHub Releaseはまだありません。正式なビルドはリリースページで配布します。</p>
+            <a
+              class="text-link"
+              href="https://github.com/yuske-nakajima/zatto-desktop/releases"
+              target="_blank"
+              rel="noopener noreferrer"
+            >配布先を見る ↗</a>
+          </div>
+          <div class="platform-list">
+            <article class="platform-card" data-platform="macOS">
+              <header><h3>macOS</h3><span class="status-tag">準備中</span></header>
+              <p>公開後はZIPを展開し、zattoをApplicationsへ移動してFinderから開きます。</p>
+            </article>
+            <article class="platform-card" data-platform="Windows">
+              <header><h3>Windows</h3><span class="status-tag">準備中</span></header>
+              <p>公開後はインストーラーを実行し、スタートメニューからzattoを起動します。</p>
+            </article>
+            <article class="platform-card" data-platform="Linux">
+              <header><h3>Linux</h3><span class="status-tag">準備中</span></header>
+              <p>公開後はAPTでDebianパッケージをインストールし、zattoを起動します。</p>
+            </article>
+          </div>
+          <aside class="artifact-note" aria-label="開発検証用のartifact">
+            <p>
+              CIでは、Windows版とLinux版のartifactを開発検証用に生成しています。
+              正式なダウンロードではなく、取得にはGitHubへのサインインが必要です。
+            </p>
+            <a
+              class="text-link"
+              href="https://github.com/yuske-nakajima/zatto-desktop/actions/workflows/ci.yml"
+              target="_blank"
+              rel="noopener noreferrer"
+            >CI workflowを開く ↗</a>
+          </aside>
         </div>
-        <div class="platform-list">
-          <article data-platform="macOS">
-            <p class="platform-name">macOS</p>
-            <h3>ダウンロード準備中</h3>
-            <p>公開後はZIPを展開し、zattoをApplicationsへ移動してFinderから開きます。</p>
-          </article>
-          <article data-platform="Windows">
-            <p class="platform-name">Windows</p>
-            <h3>ダウンロード準備中</h3>
-            <p>公開後はインストーラーを実行し、スタートメニューからzattoを起動します。</p>
-          </article>
-          <article data-platform="Linux">
-            <p class="platform-name">Linux</p>
-            <h3>ダウンロード準備中</h3>
-            <p>公開後はAPTでDebianパッケージをインストールし、zattoを起動します。</p>
-          </article>
-        </div>
-        <aside class="artifact-note" aria-labelledby="artifact-title">
-          <h3 id="artifact-title">開発検証用のartifact</h3>
-          <p>
-            CIでは、Windows版とLinux版のartifactを開発検証用に生成しています。
-            正式なダウンロードではなく、取得にはGitHubへのサインインが必要です。
-          </p>
-          <a
-            class="text-link"
-            href="https://github.com/yuske-nakajima/zatto-desktop/actions/workflows/ci.yml"
-            target="_blank"
-            rel="noopener noreferrer"
-          >CI workflowを開く <span aria-hidden="true">↗</span></a>
-        </aside>
       </section>
     </main>
 
-    <footer class="site-footer">
-      <div class="page-shell footer-shell">
-        <p><strong>zatto</strong><br />ローカルHTMLを、ひとつに。</p>
-        <nav aria-label="プロジェクトリンク">
-          <a href="https://github.com/yuske-nakajima/zatto-desktop" target="_blank" rel="noopener noreferrer">リポジトリ</a>
-          <a href="https://github.com/yuske-nakajima/zatto-desktop/issues" target="_blank" rel="noopener noreferrer">Issues</a>
-          <a href="https://github.com/yuske-nakajima/zatto/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">CLIのMITライセンス</a>
-        </nav>
+    <footer class="site-footer accent-panel">
+      <div class="page-shell">
+        <div class="footer-main">
+          <div class="footer-brand">
+            <img src="/zatto-wordmark.png" alt="zatto" width="104" height="26" />
+            <p>ローカルHTMLを、ひとつに。</p>
+          </div>
+          <nav class="footer-links" aria-label="プロジェクトリンク">
+            <a href="https://github.com/yuske-nakajima/zatto-desktop" target="_blank" rel="noopener noreferrer">リポジトリ</a>
+            <a href="https://github.com/yuske-nakajima/zatto-desktop/issues" target="_blank" rel="noopener noreferrer">Issues</a>
+            <a href="https://github.com/yuske-nakajima/zatto/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">CLIのMITライセンス</a>
+          </nav>
+        </div>
+        <div class="footer-meta"><p>© 2026 zatto</p></div>
       </div>
     </footer>
   </body>

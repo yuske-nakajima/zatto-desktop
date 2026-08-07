@@ -11,6 +11,9 @@ const requiredFiles = [
   "robots.txt",
   "sitemap.xml",
   "zatto-icon.png",
+  "zatto-wordmark.png",
+  "fonts/space-grotesk-variable.ttf",
+  "fonts/SPACE-GROTESK-LICENSE.txt",
 ];
 
 await Promise.all(
