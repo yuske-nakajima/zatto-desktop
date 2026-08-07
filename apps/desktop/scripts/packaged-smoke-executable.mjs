@@ -15,7 +15,7 @@ const defaultDependencies = {
  * Runs a smoke operation against the installed executable for a Forge artifact.
  *
  * @template T
- * @param {{ architecture: string; outputDirectory: string; platform: NodeJS.Platform; version: string }} options - Artifact identity
+ * @param {{ architecture: string; linuxExecutablePath?: string; outputDirectory: string; platform: NodeJS.Platform; version: string }} options - Artifact identity and optional installed Linux executable
  * @param {(executablePath: string) => Promise<T>} operation - Smoke operation
  * @param {object} dependencies - Package resolution and extraction adapters
  * @returns {Promise<T>} Smoke operation result
@@ -27,6 +27,9 @@ export async function withPackagedSmokeExecutable(
   dependencies = defaultDependencies,
 ) {
   if (options.platform === "linux") {
+    if (options.linuxExecutablePath) {
+      return operation(options.linuxExecutablePath);
+    }
     const packagePath = await dependencies.resolveDebianPackagePath(
       options.outputDirectory,
       options.version,

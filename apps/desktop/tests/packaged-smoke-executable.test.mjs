@@ -3,6 +3,33 @@ import { describe, expect, it, vi } from "vitest";
 import { withPackagedSmokeExecutable } from "../scripts/packaged-smoke-executable.mjs";
 
 describe("withPackagedSmokeExecutable", () => {
+  it("uses an installed Linux executable without extracting the deb", async () => {
+    const operation = vi.fn(async () => "passed");
+    const dependencies = {
+      resolveDebianPackagePath: vi.fn(),
+      resolvePackagedAppPaths: vi.fn(),
+      withExtractedDebianPackage: vi.fn(),
+    };
+
+    await expect(
+      withPackagedSmokeExecutable(
+        {
+          architecture: "x64",
+          linuxExecutablePath: "/usr/bin/zatto",
+          outputDirectory: "/out",
+          platform: "linux",
+          version: "0.1.9",
+        },
+        operation,
+        dependencies,
+      ),
+    ).resolves.toBe("passed");
+    expect(operation).toHaveBeenCalledWith("/usr/bin/zatto");
+    expect(dependencies.resolveDebianPackagePath).not.toHaveBeenCalled();
+    expect(dependencies.withExtractedDebianPackage).not.toHaveBeenCalled();
+    expect(dependencies.resolvePackagedAppPaths).not.toHaveBeenCalled();
+  });
+
   it("runs Linux smoke operations against the executable extracted from the deb", async () => {
     const operation = vi.fn(async () => "passed");
     const dependencies = {

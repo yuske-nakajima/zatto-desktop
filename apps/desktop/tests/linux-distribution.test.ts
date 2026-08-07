@@ -36,6 +36,17 @@ describe("Linux distribution", () => {
     expect(workflow).toContain("xvfb-run --auto-servernum pnpm smoke:dev");
     expect(workflow).toContain("xvfb-run --auto-servernum pnpm make");
     expect(workflow).toContain("xvfb-run --auto-servernum pnpm smoke:packaged");
+    expect(workflow).toContain("Install Linux Debian package");
+    expect(workflow).toContain(
+      "packages=(apps/desktop/out/make/deb/x64/zatto_*.deb)",
+    );
+    expect(workflow).toContain("$" + "{#packages[@]} != 1");
+    expect(workflow).toContain(
+      'sudo apt-get install --yes "./' + "$" + '{packages[0]}"',
+    );
+    expect(workflow).toContain("ZATTO_LINUX_EXECUTABLE_PATH: /usr/bin/zatto");
+    expect(workflow).toContain("always() && runner.os == 'Linux'");
+    expect(workflow).toContain("sudo apt-get remove --yes zatto");
     expect(workflow).toContain("zatto-linux-deb");
     expect(workflow).toContain("apps/desktop/out/make/deb/x64/zatto_*.deb");
   });
@@ -56,6 +67,9 @@ describe("Linux distribution", () => {
     expect(smokeSource).toContain('"--smoke-test-zatto-server"');
     expect(smokeSource).toContain('"--smoke-test-window-lifecycle"');
     expect(smokeSource).toContain('process.platform === "linux"');
+    expect(smokeSource).toContain(
+      "linuxExecutablePath: process.env.ZATTO_LINUX_EXECUTABLE_PATH",
+    );
   });
 
   it("documents Debian installation and removal in both languages", async () => {

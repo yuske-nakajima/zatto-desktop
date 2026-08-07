@@ -13,6 +13,7 @@ const packageMetadata = JSON.parse(
 await withPackagedSmokeExecutable(
   {
     architecture: process.arch,
+    linuxExecutablePath: process.env.ZATTO_LINUX_EXECUTABLE_PATH,
     outputDirectory: path.resolve("out"),
     platform: process.platform,
     version: packageMetadata.version,
