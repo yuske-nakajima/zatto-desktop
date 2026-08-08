@@ -1,0 +1,157 @@
+@media (max-width: 960px) {
+  .page-shell {
+    width: min(calc(100% - 4rem), var(--content-width));
+  }
+
+  .nav-links {
+    gap: 1.5rem;
+  }
+
+  .hero {
+    min-height: 480px;
+    padding-block: 6rem 7rem;
+  }
+
+  .workflow-section,
+  .availability-section,
+  .identity-shell {
+    padding-block: 6rem;
+  }
+
+  .identity-shell {
+    gap: 3rem;
+  }
+
+  .entry-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .page-shell {
+    width: min(calc(100% - 2rem), var(--content-width));
+  }
+
+  .nav-shell {
+    min-height: 72px;
+  }
+
+  .nav-links > a:first-child {
+    display: none;
+  }
+
+  .nav-links {
+    gap: 1rem;
+  }
+
+  .nav-source {
+    padding-inline: 1rem;
+  }
+
+  .hero {
+    min-height: auto;
+    padding-block: 5rem 6rem;
+  }
+
+  .hero-copy {
+    gap: 2rem;
+  }
+
+  .hero-intro {
+    font-size: 1.0625rem;
+  }
+
+  .workflow-section,
+  .availability-section,
+  .identity-shell {
+    padding-block: 5rem;
+  }
+
+  .feature-list,
+  .identity-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-list {
+    gap: 3.5rem;
+    margin-top: 4rem;
+  }
+
+  .identity-shell {
+    gap: 2.5rem;
+  }
+
+  .entry-card {
+    padding: 2rem;
+  }
+
+  .footer-main {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .site-footer {
+    padding-top: 5rem;
+  }
+
+  .footer-main {
+    gap: 3rem;
+  }
+}
+
+@media (max-width: 540px) {
+  h1 {
+    font-size: 2.75rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  .nav-links > a:not(.nav-source):not(.nav-language) {
+    display: none;
+  }
+
+  .hero-actions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .entry-card-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .footer-links {
+    gap: 1.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto;
+    transition-duration: 0.01ms;
+  }
+}
+
+@media (forced-colors: active) {
+  .primary-link,
+  .nav-source,
+  .entry-card,
+  .command-block {
+    border: 2px solid ButtonText;
+  }
+
+  .primary-link,
+  .nav-source {
+    forced-color-adjust: none;
+    background: ButtonFace;
+    color: ButtonText;
+  }
+}

@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>zatto — Keep your HTML files together</title>
+    <meta
+      name="description"
+      content="zatto keeps local HTML files in one focused session, whether you start from the terminal or the desktop app."
+    />
+    <link rel="canonical" href="https://zatto.yuske.app/" />
+    <link rel="alternate" hreflang="en" href="https://zatto.yuske.app/" />
+    <link rel="alternate" hreflang="ja" href="https://zatto.yuske.app/ja/" />
+    <link rel="alternate" hreflang="x-default" href="https://zatto.yuske.app/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="zatto" />
+    <meta property="og:title" content="zatto — Keep your HTML files together" />
+    <meta property="og:description" content="Local HTML, gathered from the terminal or desktop." />
+    <meta property="og:url" content="https://zatto.yuske.app/" />
+    <meta property="og:image" content="https://zatto.yuske.app/zatto-icon.png" />
+    <meta property="og:image:alt" content="The zatto app icon" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="zatto — Keep your HTML files together" />
+    <meta name="twitter:description" content="Local HTML, gathered from the terminal or desktop." />
+    <meta name="twitter:image" content="https://zatto.yuske.app/zatto-icon.png" />
+    <meta name="theme-color" content="#4f46e5" />
+    <link rel="icon" href="/zatto-icon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/zatto-icon.png" />
+    <link rel="stylesheet" href="/styles/base.css" />
+    <link rel="stylesheet" href="/styles/layout.css" />
+    <link rel="stylesheet" href="/styles/components.css" />
+    <link rel="stylesheet" href="/styles/entries.css" />
+    <link rel="stylesheet" href="/styles/responsive.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header class="site-header hero-panel accent-panel">
+      <nav class="nav-shell page-shell" aria-label="Primary navigation">
+        <a class="brand" href="/" aria-label="zatto home">
+          <img src="/zatto-wordmark.png" alt="" width="104" height="26" />
+        </a>
+        <div class="nav-links">
+          <a href="#workflow">Workflow</a>
+          <a href="#get-zatto">Get zatto</a>
+          <a class="nav-language" href="/ja/" hreflang="ja" lang="ja">日本語</a>
+          <a
+            class="nav-source"
+            href="#project-links"
+          >GitHub ↓</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main-content" tabindex="-1">
+      <section class="hero-panel accent-panel" aria-labelledby="hero-title">
+        <div class="hero page-shell">
+          <div class="hero-copy">
+            <div class="overline-row">
+              <span class="overline-dot" aria-hidden="true"></span>
+              <p class="eyebrow">A place for the HTML on your desk</p>
+            </div>
+            <div class="hero-heading">
+              <h1 id="hero-title">Keep your HTML files together.</h1>
+              <p class="hero-intro">
+                Use zatto from the terminal or as a desktop app. The same local viewer keeps a
+                folder of pages together, whichever entrance fits your work.
+              </p>
+            </div>
+            <div class="hero-actions">
+              <a
+                class="primary-link"
+                href="#get-zatto"
+              >Get zatto</a>
+              <a class="text-link" href="#workflow">See how it works →</a>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="workflow" class="workflow-section" aria-labelledby="workflow-title">
+        <div class="page-shell">
+          <div class="section-heading">
+            <p class="eyebrow">Workflow</p>
+            <h2 id="workflow-title">From folder to focused view</h2>
+          </div>
+          <ol class="feature-list">
+            <li>
+              <span class="feature-index">01</span>
+              <div class="feature-copy">
+                <h3>Add local HTML</h3>
+                <p>Pass file paths in the terminal, or choose and drop them in the desktop app.</p>
+              </div>
+            </li>
+            <li>
+              <span class="feature-index">02</span>
+              <div class="feature-copy">
+                <h3>Keep one session</h3>
+                <p>Add more files without losing the pages already gathered in zatto.</p>
+              </div>
+            </li>
+            <li>
+              <span class="feature-index">03</span>
+              <div class="feature-copy">
+                <h3>Move between pages</h3>
+                <p>Switch from one panel while relative images, links, and styles keep working.</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="identity-section accent-panel" aria-labelledby="identity-title">
+        <div class="identity-shell page-shell">
+          <div class="identity-statement">
+            <p class="eyebrow">Local by default</p>
+            <h2 id="identity-title">Keep your HTML files on your machine.</h2>
+          </div>
+          <div class="identity-detail">
+            <p>
+              zatto opens files in a local viewer without uploading them. Relative images and
+              styles keep working as you review each page.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="get-zatto" class="availability-section" aria-labelledby="get-zatto-title">
+        <div class="page-shell">
+          <div class="availability-heading">
+            <p class="eyebrow">Get zatto</p>
+            <h2 id="get-zatto-title">Choose the entrance that fits.</h2>
+            <p>The terminal is available now. Public desktop downloads are being prepared.</p>
+          </div>
+          <div class="entry-grid">
+            <article class="entry-card" data-entry="terminal">
+              <header class="entry-card-header">
+                <div><p class="entry-label">From the terminal</p><h3>Run without installing</h3></div>
+                <span class="status-tag status-available">Available</span>
+              </header>
+              <p>With Node.js 22 or later, open a file directly or pass several paths at once.</p>
+              <pre class="command-block"><code>npx @yuske-nakajima/zatto file.html</code></pre>
+              <div class="entry-actions">
+                <a class="text-link" href="https://www.npmjs.com/package/@yuske-nakajima/zatto" target="_blank" rel="noopener noreferrer">npm package ↗</a>
+                <a class="text-link" href="https://github.com/yuske-nakajima/zatto" target="_blank" rel="noopener noreferrer">CLI repository ↗</a>
+              </div>
+            </article>
+            <article class="entry-card" data-entry="desktop">
+              <header class="entry-card-header">
+                <div><p class="entry-label">From the desktop</p><h3>Choose files or drop them anywhere</h3></div>
+                <span class="status-tag">In progress</span>
+              </header>
+              <p>Use the native file picker or drag and drop across the whole app window.</p>
+              <ul class="platform-rows" aria-label="Desktop platform status">
+                <li data-platform="macOS"><strong>macOS</strong><span>In progress</span></li>
+                <li data-platform="Windows"><strong>Windows</strong><span>In progress</span></li>
+                <li data-platform="Linux"><strong>Linux</strong><span>In progress</span></li>
+              </ul>
+              <p class="entry-note">Windows and Linux CI artifacts are for development verification, not formal downloads.</p>
+              <div class="entry-actions">
+                <a class="text-link" href="https://github.com/yuske-nakajima/zatto-desktop/releases" target="_blank" rel="noopener noreferrer">Release channel ↗</a>
+                <a class="text-link" href="https://github.com/yuske-nakajima/zatto-desktop" target="_blank" rel="noopener noreferrer">Desktop repository ↗</a>
+                <a class="text-link" href="https://github.com/yuske-nakajima/zatto-desktop/actions/workflows/ci.yml" target="_blank" rel="noopener noreferrer">CI workflow ↗</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer accent-panel">
+      <div class="page-shell">
+        <div class="footer-main">
+          <div class="footer-brand">
+            <img src="/zatto-wordmark.png" alt="zatto" width="104" height="26" />
+            <p>Local HTML, gathered.</p>
+          </div>
+          <nav id="project-links" class="footer-links" aria-label="Project links">
+            <a href="https://github.com/yuske-nakajima/zatto" target="_blank" rel="noopener noreferrer">CLI repository</a>
+            <a href="https://github.com/yuske-nakajima/zatto-desktop" target="_blank" rel="noopener noreferrer">Desktop repository</a>
+            <a href="https://github.com/yuske-nakajima/zatto/issues" target="_blank" rel="noopener noreferrer">CLI issues</a>
+            <a href="https://github.com/yuske-nakajima/zatto-desktop/issues" target="_blank" rel="noopener noreferrer">Desktop issues</a>
+            <a href="https://github.com/yuske-nakajima/zatto/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">CLI MIT license</a>
+          </nav>
+        </div>
+        <div class="footer-meta"><p>© 2026 zatto</p></div>
+      </div>
+    </footer>
+  </body>
+</html>

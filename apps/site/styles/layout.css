@@ -1,0 +1,152 @@
+.hero-panel,
+.identity-section,
+.site-footer {
+  background: var(--color-bg-accent);
+  color: var(--color-text-inverse);
+}
+
+.site-header {
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--color-text-primary) 55%, transparent);
+}
+
+.nav-shell {
+  display: flex;
+  min-height: 96px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: inline-flex;
+  width: 104px;
+  height: 26px;
+  align-items: center;
+}
+
+.brand img {
+  width: 104px;
+  height: 26px;
+  object-fit: contain;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  color: var(--color-text-inverse);
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.nav-links > a:not(.nav-source) {
+  opacity: 0.82;
+}
+
+.nav-links a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+}
+
+.nav-source {
+  padding: 0.625rem 1.25rem;
+  border-radius: 99px;
+  background: var(--color-bg-surface);
+  color: var(--color-text-accent);
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.hero {
+  display: flex;
+  min-height: 540px;
+  align-items: center;
+  padding-block: 7.5rem 8.75rem;
+}
+
+.workflow-section,
+.availability-section {
+  padding-block: 8rem;
+}
+
+.workflow-section {
+  background: var(--color-bg-surface);
+}
+
+.section-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.identity-shell {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5rem;
+  padding-block: 8rem;
+}
+
+.availability-section {
+  background: var(--color-bg-app);
+}
+
+.availability-heading {
+  display: flex;
+  max-width: 960px;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.site-footer {
+  padding-block: 6rem 2rem;
+  border-top: 1px solid
+    color-mix(in srgb, var(--color-text-primary) 55%, transparent);
+}
+
+.footer-main,
+.footer-meta,
+.footer-links {
+  display: flex;
+}
+
+.footer-main {
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 4rem;
+  padding-bottom: 4rem;
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.footer-brand img {
+  width: 104px;
+  height: 26px;
+  object-fit: contain;
+}
+
+.footer-brand p,
+.footer-meta p {
+  margin-bottom: 0;
+  opacity: 0.92;
+  font-size: 0.875rem;
+}
+
+.footer-links {
+  flex-wrap: wrap;
+  gap: 2.5rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.footer-meta {
+  justify-content: space-between;
+  padding-top: 2rem;
+  border-top: 1px solid
+    color-mix(in srgb, var(--color-text-primary) 55%, transparent);
+}

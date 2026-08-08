@@ -5,6 +5,7 @@
       "**",
       "!**/node_modules",
       "!**/.webpack",
+      "!**/dist",
       "!**/out",
       "!**/.pnpm-store"
     ]

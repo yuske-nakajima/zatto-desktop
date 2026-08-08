@@ -4,3 +4,4 @@ node_modules/
 .pnpm-store/
 .webpack/
 out/
+apps/site/dist/
