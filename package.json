@@ -1,7 +1,7 @@
 {
   "name": "zatto-desktop-workspace",
   "private": true,
-  "packageManager": "pnpm@11.17.0",
+  "packageManager": "pnpm@12.17.0",
   "engines": {
     "node": ">=24.18.0"
   },
@@ -18,6 +18,6 @@
     "test": "pnpm --recursive --if-present test"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.5"
+    "@biomejs/biome": "2.6.4"
   }
 }

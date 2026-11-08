@@ -27,7 +27,7 @@ describe("zatto HTML-file add boundary", () => {
       await waitForSocketOpen(socket);
       const update = waitForSocketMessage(socket);
       const first = await requestHtmlFileAdd(
-        `http://127.0.0.1:${server.port}/api/session/add`,
+        `http://127.0.0.1:${server.port}/rpc`,
         [page, path.join(directory, "missing.html")],
         AbortSignal.timeout(5_000),
       );
@@ -41,7 +41,7 @@ describe("zatto HTML-file add boundary", () => {
       });
 
       const duplicate = await requestHtmlFileAdd(
-        `http://127.0.0.1:${server.port}/api/session/add`,
+        `http://127.0.0.1:${server.port}/rpc`,
         [page],
         AbortSignal.timeout(5_000),
       );

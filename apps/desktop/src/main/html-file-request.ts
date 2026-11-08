@@ -1,3 +1,5 @@
+import { callZattoRpc } from "./zatto-rpc";
+
 /** HTTP response needed by the HTML-file add service. */
 export interface HtmlFileAddResponse {
   body: unknown;
@@ -10,26 +12,36 @@ export interface HtmlFileSessionEntry {
   id: string;
 }
 
-/** Sends a bounded JSON add request without following redirects. */
+/**
+ * Adds files to the active workspace through zatto's JSON-RPC endpoint.
+ *
+ * @param url - Absolute URL of the owned zatto `/rpc` endpoint
+ * @param paths - Absolute file paths to add
+ * @param signal - Cancellation signal covering both RPC calls
+ * @returns HTTP-style response; status 201 marks a successful add
+ * @throws When a request cannot be sent
+ */
 export async function requestHtmlFileAdd(
   url: string,
   paths: readonly string[],
   signal: AbortSignal,
 ): Promise<HtmlFileAddResponse> {
-  const response = await fetch(url, {
-    body: JSON.stringify({ paths }),
-    headers: { "content-type": "application/json" },
-    method: "POST",
-    redirect: "error",
-    signal,
-  });
-  let body: unknown;
-  try {
-    body = await response.json();
-  } catch {
-    body = undefined;
+  const session = await callZattoRpc(url, "session.get", {}, signal);
+  const workspaceId = session.ok
+    ? readActiveWorkspaceId(session.result)
+    : undefined;
+  if (workspaceId === undefined) {
+    return { body: undefined, status: session.ok ? 502 : session.status };
   }
-  return { body, status: response.status };
+  const added = await callZattoRpc(
+    url,
+    "session.add",
+    { paths: [...paths], workspaceId },
+    signal,
+  );
+  return added.ok
+    ? { body: added.result, status: 201 }
+    : { body: undefined, status: added.status };
 }
 
 /** Reads path and ID pairs from the owned session without following redirects. */
@@ -37,12 +49,14 @@ export async function inspectHtmlFileSession(
   ownershipUrl: string,
   signal: AbortSignal,
 ): Promise<HtmlFileSessionEntry[]> {
-  const response = await fetch(new URL("api/session", ownershipUrl), {
-    redirect: "error",
+  const outcome = await callZattoRpc(
+    new URL("rpc", ownershipUrl).toString(),
+    "session.get",
+    {},
     signal,
-  });
-  if (response.status !== 200) throw new Error("session request failed");
-  const body: unknown = await response.json();
+  );
+  if (!outcome.ok) throw new Error("session request failed");
+  const body = outcome.result;
   if (!isRecord(body) || !Array.isArray(body.entries)) {
     throw new Error("session response is invalid");
   }
@@ -72,6 +86,12 @@ export function parseAddedIds(body: unknown): string[] | undefined {
     ids.push(entry.id);
   }
   return ids;
+}
+
+function readActiveWorkspaceId(value: unknown): string | undefined {
+  if (!isRecord(value)) return undefined;
+  const id = value.activeWorkspaceId;
+  return typeof id === "string" && id !== "" ? id : undefined;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

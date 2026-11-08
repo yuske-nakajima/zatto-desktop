@@ -11,7 +11,7 @@ const validRuntimeRecord = {
   pid: 1234,
   port: 49152,
   processFingerprint: "process-fingerprint",
-  protocolVersion: 1,
+  protocolVersion: 4,
 };
 
 describe("parseZattoRuntimeRecord", () => {
@@ -46,16 +46,16 @@ describe("validateZattoHealthIdentity", () => {
         {
           instanceId: INSTANCE_ID,
           name: "zatto",
-          protocolVersion: 1,
-          version: "0.1.3",
+          protocolVersion: 4,
+          version: "3.8.2",
         },
         runtimeRecord,
       ),
     ).toEqual({
       instanceId: INSTANCE_ID,
       name: "zatto",
-      protocolVersion: 1,
-      version: "0.1.3",
+      protocolVersion: 4,
+      version: "3.8.2",
     });
   });
 
@@ -63,26 +63,26 @@ describe("validateZattoHealthIdentity", () => {
     {
       instanceId: INSTANCE_ID,
       name: "other",
-      protocolVersion: 1,
-      version: "0.1.3",
+      protocolVersion: 4,
+      version: "3.8.2",
     },
     {
       instanceId: "other",
       name: "zatto",
-      protocolVersion: 1,
-      version: "0.1.3",
+      protocolVersion: 4,
+      version: "3.8.2",
     },
     {
       instanceId: INSTANCE_ID,
       name: "zatto",
-      protocolVersion: 2,
-      version: "0.1.3",
+      protocolVersion: 3,
+      version: "3.8.2",
     },
     {
       instanceId: INSTANCE_ID,
       name: "zatto",
-      protocolVersion: 1,
-      version: "0.1.2",
+      protocolVersion: 4,
+      version: "3.8.1",
     },
   ])("rejects a health identity mismatch: %j", (identity) => {
     expect(() => validateZattoHealthIdentity(identity, runtimeRecord)).toThrow(
@@ -96,10 +96,10 @@ describe("validateZattoHealthIdentity", () => {
         {
           instanceId: INSTANCE_ID,
           name: "zatto",
-          protocolVersion: 2,
-          version: "0.1.3",
+          protocolVersion: 3,
+          version: "3.8.2",
         },
-        { ...runtimeRecord, protocolVersion: 2 },
+        { ...runtimeRecord, protocolVersion: 3 },
       ),
     ).toThrow("zatto health identity does not match the runtime record");
   });

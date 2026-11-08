@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { access, readFile } from "node:fs/promises";
 import { session, utilityProcess } from "electron";
+import { callZattoRpc } from "./zatto-rpc";
 import { resolveZattoServerEntry } from "./zatto-server-entry";
 import type {
   ZattoServerLaunchRequest,
@@ -82,25 +83,19 @@ async function readRuntimeRecord(
 }
 
 async function requestHealth(url: string): Promise<ZattoServerResponse> {
-  const response = await fetch(url);
-  let body: unknown;
-  try {
-    body = await response.json();
-  } catch {
-    body = undefined;
-  }
-  return { body, status: response.status };
+  const outcome = await callZattoRpc(url, "server.health", {});
+  return outcome.ok
+    ? { body: outcome.result, status: 200 }
+    : { status: outcome.status };
 }
 
 async function requestShutdown(
   url: string,
   instanceId: string,
 ): Promise<ZattoServerResponse> {
-  const response = await fetch(url, {
-    headers: { "x-zatto-instance-id": instanceId },
-    method: "POST",
-  });
-  return { status: response.status };
+  const outcome = await callZattoRpc(url, "server.shutdown", { instanceId });
+  // The manager treats 202 as an accepted shutdown.
+  return { status: outcome.ok ? 202 : outcome.status };
 }
 
 async function pathExists(targetPath: string): Promise<boolean> {

@@ -18,27 +18,27 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@yuske-nakajima/zatto": "0.1.3",
+    "@yuske-nakajima/zatto": "3.8.2",
     "electron-squirrel-startup": "1.0.1"
   },
   "devDependencies": {
-    "@electron-forge/cli": "7.11.2",
-    "@electron-forge/maker-deb": "7.11.2",
-    "@electron-forge/maker-squirrel": "7.11.2",
-    "@electron-forge/maker-zip": "7.11.2",
-    "@electron-forge/plugin-webpack": "7.11.2",
-    "@electron-forge/shared-types": "7.11.2",
-    "@electron/asar": "3.4.1",
+    "@electron-forge/cli": "8.0.1",
+    "@electron-forge/maker-deb": "8.0.1",
+    "@electron-forge/maker-squirrel": "8.0.1",
+    "@electron-forge/maker-zip": "8.0.1",
+    "@electron-forge/plugin-webpack": "8.0.1",
+    "@electron-forge/shared-types": "8.0.1",
+    "@electron/asar": "4.3.1",
     "@types/electron-squirrel-startup": "1.0.2",
-    "@types/node": "24.10.13",
-    "css-loader": "7.1.2",
-    "electron": "43.3.0",
-    "esbuild": "0.28.1",
+    "@types/node": "26.6.6",
+    "css-loader": "7.1.5",
+    "electron": "45.2.1",
+    "esbuild": "0.28.2",
     "esbuild-loader": "4.5.0",
     "style-loader": "4.0.0",
     "typescript": "7.0.2",
-    "vitest": "4.1.10",
-    "webpack": "5.104.1",
-    "webpack-cli": "6.0.1"
+    "vitest": "5.0.5",
+    "webpack": "5.112.2",
+    "webpack-cli": "7.3.1"
   }
 }

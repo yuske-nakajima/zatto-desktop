@@ -12,13 +12,13 @@ export const RUNTIME_RECORD = {
   pid: 4321,
   port: 49152,
   processFingerprint: "desktop-owned-process",
-  protocolVersion: 1,
+  protocolVersion: 4,
 };
 export const HEALTH_IDENTITY = {
   instanceId: INSTANCE_ID,
   name: "zatto",
-  protocolVersion: 1,
-  version: "0.1.3",
+  protocolVersion: 4,
+  version: "3.8.2",
 };
 
 /** Controllable promise used by lifecycle tests. */

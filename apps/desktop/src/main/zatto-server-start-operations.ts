@@ -26,7 +26,7 @@ export async function requestCompatibleZattoHealth(
   let response: ZattoServerResponse;
   try {
     response = await withLifecycleTimeout(
-      options.dependencies.requestHealth(`${url}/api/health`),
+      options.dependencies.requestHealth(`${url}/rpc`),
       options.startupTimeoutMs,
       () =>
         new ZattoServerError(
