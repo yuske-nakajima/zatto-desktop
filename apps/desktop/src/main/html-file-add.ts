@@ -62,7 +62,7 @@ export async function addHtmlFiles(
   if (!isAllowedOwnedNavigation(ownershipUrl, ownershipUrl)) {
     return { status: "failed" };
   }
-  const endpoint = new URL("api/session/add", ownershipUrl).toString();
+  const endpoint = new URL("rpc", ownershipUrl).toString();
   if (!isAllowedOwnedNavigation(endpoint, ownershipUrl)) {
     return { status: "failed" };
   }

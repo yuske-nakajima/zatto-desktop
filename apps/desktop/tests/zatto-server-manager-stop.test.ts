@@ -12,7 +12,7 @@ describe("ZattoServerManager stop", () => {
     expect(
       fixture.dependencies.requestShutdown,
     ).toHaveBeenCalledExactlyOnceWith(
-      "http://127.0.0.1:49152/api/shutdown",
+      "http://127.0.0.1:49152/rpc",
       "desktop-owned-instance",
     );
     expect(fixture.processHandle.kill).not.toHaveBeenCalled();

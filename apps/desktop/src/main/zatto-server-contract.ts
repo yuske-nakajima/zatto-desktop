@@ -19,7 +19,7 @@ export interface ZattoHealthIdentity {
 
 const ZATTO_NAME = "zatto";
 const ZATTO_VERSION = zattoPackage.version;
-const ZATTO_PROTOCOL_VERSION = 1;
+const ZATTO_PROTOCOL_VERSION = 4;
 
 /**
  * Parses and validates a zatto runtime record.
@@ -38,7 +38,7 @@ export function parseZattoRuntimeRecord(value: unknown): ZattoRuntimeRecord {
 /**
  * Validates that health data belongs to the started zatto process.
  *
- * @param value - Parsed JSON returned by `/api/health`
+ * @param value - Parsed JSON returned by `server.health`
  * @param runtimeRecord - Runtime record written by the utility process
  * @returns Validated health identity
  * @throws Error when the health response does not identify the expected server

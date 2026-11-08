@@ -38,7 +38,7 @@ describe("addHtmlFiles", () => {
       status: "added",
     });
     expect(request).toHaveBeenCalledWith(
-      "http://127.0.0.1:49152/api/session/add",
+      "http://127.0.0.1:49152/rpc",
       ["/tmp/first.html", "/tmp/second.htm"],
       expect.any(AbortSignal),
     );

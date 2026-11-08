@@ -101,7 +101,7 @@ async function requestShutdown(
   try {
     return await withLifecycleTimeout(
       options.dependencies.requestShutdown(
-        `${child.ownership.url}/api/shutdown`,
+        `${child.ownership.url}/rpc`,
         child.ownership.instanceId,
       ),
       options.shutdownTimeoutMs,
